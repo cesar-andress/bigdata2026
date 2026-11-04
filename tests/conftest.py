@@ -135,6 +135,9 @@ def src_texts(repo_root: Path) -> dict[str, str]:
     src = repo_root / "src"
     if not src.is_dir():
         pytest.fail("Falta el paquete src/.")
-    for path in sorted(src.glob("*.py")):
-        textos[path.name] = path.read_text(encoding="utf-8")
+    for path in sorted(src.rglob("*.py")):
+        textos[path.relative_to(src).as_posix()] = path.read_text(encoding="utf-8")
+    for nombre in ("config.py", "paths.py"):
+        if nombre not in textos and f"core/{nombre}" in textos:
+            textos[nombre] = textos[f"core/{nombre}"]
     return textos

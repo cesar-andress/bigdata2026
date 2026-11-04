@@ -23,6 +23,14 @@ def import_src(repo_root: Path) -> SimpleNamespace:
             del sys.modules[name]
     sys.path[:] = [p for p in sys.path if p != root]
     sys.path.insert(0, root)
+    def cargar(nombre: str):
+        try:
+            return importlib.import_module(f"src.{nombre}")
+        except ModuleNotFoundError:
+            if nombre in ("config", "paths"):
+                return importlib.import_module(f"src.core.{nombre}")
+            raise
+
     nombres = (
         "config",
         "paths",
@@ -32,7 +40,7 @@ def import_src(repo_root: Path) -> SimpleNamespace:
         "build_cards",
         "pipeline",
     )
-    mods = {nombre: importlib.import_module(f"src.{nombre}") for nombre in nombres}
+    mods = {nombre: cargar(nombre) for nombre in nombres}
     mods["pkg"] = importlib.import_module("src")
     return SimpleNamespace(**mods)
 

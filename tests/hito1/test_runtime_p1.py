@@ -139,6 +139,8 @@ def _wb() -> list:
 def test_cada_modulo_de_src_compila(repo_root: Path, nombre: str):
     """Los ocho módulos del esqueleto existen y son Python válido."""
     path = repo_root / "src" / nombre
+    if not path.is_file() and nombre in ("config.py", "paths.py"):
+        path = repo_root / "src" / "core" / nombre
     assert path.is_file(), f"Falta src/{nombre}. El pipeline de la práctica parte de ese fichero."
     ast.parse(path.read_text(encoding="utf-8"))
 

@@ -136,18 +136,19 @@ el **11 de noviembre de 2026, a las 23:59**. A fecha de esta tabla,
 
 | Repositorio | Commit comprobado | Hito 1 | ¿Pasa el Hito 1? | Hito 2 | ¿Pasa el Hito 2? |
 | --- | --- | --- | --- | --- | --- |
-| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `16f1941` · 28/10/2026 | 34 passed, 30 failed, 1 skipped | No | 0 passed, 20 failed | No |
+| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `290ab68` · 04/11/2026 19:13 | 64 passed, 1 failed | No | 2 passed, 18 failed | No |
 | [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `dd59cee` · 28/10/2026 | 34 passed, 30 failed, 1 skipped | No | 0 passed, 20 failed | No |
-| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ba06a3b` · 28/10/2026 | 33 passed, 30 failed, 2 skipped | No | 0 passed, 20 failed | No |
-| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `694c4ff` · 04/11/2026 19:04, repo regenerado | 33 passed, 31 failed, 1 skipped | No | 0 passed, 20 failed | No |
-| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd` · 04/11/2026 12:53 | 45 passed, 19 failed, 1 skipped | No | 0 passed, 20 failed | No |
+| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `a6f6510` · 04/11/2026 19:58 | 34 passed, 30 failed, 1 skipped | No | 0 passed, 20 failed | No |
+| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `694c4ff` · 04/11/2026 19:04, repo regenerado | 35 passed, 29 failed, 1 skipped | No | 0 passed, 20 failed | No |
+| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd` · 04/11/2026 12:53 | 47 passed, 17 failed, 1 skipped | No | 0 passed, 20 failed | No |
 | [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | sin commits en `origin` | no se puede ejecutar | No | no se puede ejecutar | No |
 | [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `9bcf8c2` · 04/11/2026 18:36 | 53 passed, 3 failed, 9 skipped | No | 1 passed, 19 failed | No |
 
-Lo que sí aguanta en los repos que siguen con el starter es la ejecución
-de la Práctica 1 (`pytest -m runtime`): 26 passed. Eso no cuenta como
-Hito 1. El Hito 2 está a cero en todos: no hay `spark/job_01.py`, ni
-cierre, ni etiqueta `entrega-02`.
+Medido de nuevo el 4 de noviembre por la noche, tras `git pull` de cada
+`origin`. El que sigue en el starter
+([edurlix/BigDataProject](https://github.com/edurlix/BigDataProject))
+aguanta la Práctica 1 (`pytest -m runtime`: 26 passed). Eso no cuenta
+como Hito 1. Nadie tiene `spark/job_01.py` ni la etiqueta `entrega-02`.
 
 [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) se borró y se
 volvió a crear. El `main` nuevo es `694c4ff` (4 de noviembre de 2026,
@@ -160,11 +161,31 @@ terminan en error (`no option named '--repo'`). Hace falta volver a
 copiar `tests/conftest.py`. Medidos desde este repositorio, tampoco
 pasan. Además,
 `load_config` abre `country_list.csv` con una ruta relativa al
-directorio de trabajo, y el extract nuevo exige `raise_for_status` en
-la respuesta: tres tests de `runtime` fallan por eso.
+directorio de trabajo: el test de `runtime` que carga el YAML falla
+por eso. El resto del `runtime` pasa.
+
+[nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata)
+es el que más se acerca en el Hito 1: 64 passed y un solo fallo. El
+Banco Mundial sigue pidiendo por país
+(`country/{iso2}/...&page=1`), no `country/all`. Tiene
+`CONTRIBUTORS.md` con el correo institucional y el `.gitignore` deja
+fuera `data/`, `logs/` y `.venv/`. No hay job de Spark ni etiqueta
+`entrega-02` (sí `v1.0.0`). Copió tests y el workflow del Hito 1.
+
+[rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo)
+movió `config` y `paths` a `src/core/`. El contrato sigue siendo el del
+starter. El fichero `.github/workflows/hito1-tests.yaml` es un comentario,
+no un workflow.
+
+[marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto)
+sigue en `f18abfd`, con el ETL dentro de
+`practica_01_BigData_starter/`. Quedan 17 fallos: no hay
+`CONTRIBUTORS.md` ni `--force`, una respuesta que no sea 200 se guarda
+en raw, no aparece el caso 404, faltan columnas de `excluded_entities`
+y la ficha no usa la mediana.
 
 [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026)
-está más avanzado que el resto (paginación del Banco Mundial, seis
+está más avanzado que el starter (paginación del Banco Mundial, seis
 indicadores, Parquet Hive, criterio de país). Aun así no pasa. En el
 Hito 1 faltan `CONTRIBUTORS.md`, la columna `source_code` en
 `excluded_entities.csv` (ahora se llama `code`) y un User-Agent de
