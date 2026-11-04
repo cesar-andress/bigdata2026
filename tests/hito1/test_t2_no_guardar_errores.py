@@ -14,13 +14,14 @@ pytestmark = pytest.mark.hito1
 
 def test_respuesta_no_200_no_escribe_raw(repo_root: Path, monkeypatch, tmp_path):
     """Una respuesta 500 no debe acabar en raw/ como si fuera JSON válido."""
-    sys.path.insert(0, str(repo_root))
+    raiz = str(repo_root)
+    sys.path[:] = [p for p in sys.path if p != raiz]
+    sys.path.insert(0, raiz)
+    for nombre in list(sys.modules):
+        if nombre == "src" or nombre.startswith("src."):
+            del sys.modules[nombre]
     try:
         # Importación diferida: el alumno puede reorganizar módulos.
-        if "src.extract" in sys.modules:
-            del sys.modules["src.extract"]
-        if "src.paths" in sys.modules:
-            del sys.modules["src.paths"]
         extract = importlib.import_module("src.extract")
         paths = importlib.import_module("src.paths")
     except Exception as exc:  # noqa: BLE001 — mensaje pedagógico

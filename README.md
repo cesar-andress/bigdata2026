@@ -5,8 +5,8 @@ Repositorio de **demostración del profesor** para el bloque Big Data
 
 1. El **código de la primera entrega** (starter ETL `raw → clean → serving`),
    sin solución del Hito 1 / T2.
-2. La batería de **tests** (`tests/hito1/`) que comprueban el contrato del
-   extract a escala.
+2. La batería de **tests** del Hito 1 (`tests/hito1/`) y del Hito 2
+   (`tests/hito2/`), sobre el contrato de la Entrega 2.
 3. Un **workflow de GitHub Actions** (`.github/workflows/hito1-tests.yml`)
    que ejecuta `pytest` en cada push y pull request.
 
@@ -31,23 +31,41 @@ Reutilizar descargas ya hechas:
 python -m src.pipeline --skip-extract
 ```
 
-## Tests del Hito 1
+## Tests
 
 ```bash
 pip install -r requirements.txt -r requirements-dev.txt
-pytest -q
+pytest -q tests/hito1          # Hito 1
+pytest -q tests/hito2          # Hito 2
+pytest -q -m runtime           # solo lo que el código de la práctica 1 ya debe ejecutar
 ```
 
-Sobre el starter original **varios tests fallan a propósito**: el extract
-aún no cumple paginación, reintentos, idempotencia, manifiesto acumulativo,
-cortesía de equipo ni la ampliación a ≥ 6 indicadores WDI. Eso es el
-contrato que tenéis que satisfacer en vuestro repositorio.
+Sobre el starter original **los tests de contrato fallan a propósito**.
+El Hito 1 mira extract a escala, idempotencia, transform tipado, Parquet
+Hive, fichas y `CONTRIBUTORS.md`. El Hito 2 mira `spark/job_01.py`,
+la coincidencia RDD / DataFrame / SQL / SQLite, `BUGS.md`,
+`ENTREGA_02.md`, `evidencias/` y la etiqueta `entrega-02`.
+
+Los marcados `runtime` ejecutan `src/` con datos mínimos y sin red. Tienen
+que pasar también sobre el código de la Práctica 1, antes de cumplir el
+Hito 1.
+
+Para lanzar la misma batería contra otro clon, sin copiar `tests/` dentro:
+
+```bash
+pytest -q --repo=/ruta/al/clon
+# o
+DSBD_REPO=/ruta/al/clon pytest -q
+```
+
+El igual en `--repo=` importa: si la ruta va como argumento suelto, pytest
+la toma por un directorio de tests.
 
 ## GitHub Actions
 
-El workflow `Hito 1 — comprobaciones` instala dependencias y lanza
-`pytest` en Ubuntu. En la pestaña **Actions** del repositorio podéis ver
-la ejecución automática tras cada push.
+El workflow `Hitos 1 y 2 — comprobaciones` instala dependencias y lanza
+`pytest` en Ubuntu, primero el Hito 1 y después el Hito 2. En la pestaña
+**Actions** del repositorio podéis ver la ejecución automática tras cada push.
 
 ## Estructura
 
@@ -56,7 +74,8 @@ la ejecución automática tras cada push.
 | `src/` | Extract / transform / load / fichas |
 | `sources.yaml` | Fuentes y países foco |
 | `data/` | `raw` → `clean` → `serving` (artefactos locales, no versionados) |
-| `tests/hito1/` | Comprobaciones del Hito 1 |
+| `tests/hito1/` | Comprobaciones del Hito 1, más la ejecución del ETL actual |
+| `tests/hito2/` | Comprobaciones del Hito 2 (Spark y cierre) |
 | `.github/workflows/` | CI con pytest |
 
 ## Reglas del framework (no romper)
