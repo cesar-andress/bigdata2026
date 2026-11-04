@@ -22,6 +22,17 @@ import pytest
 import yaml
 
 
+def pytest_addoption(parser):
+    # También aquí: si el clon copia tests/ y no el conftest.py de la raíz,
+    # pytest tiene que conocer --repo antes de recoger los tests.
+    parser.addoption(
+        "--repo",
+        action="store",
+        default=None,
+        help="Raíz del ETL a comprobar (sources.yaml + src/).",
+    )
+
+
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",

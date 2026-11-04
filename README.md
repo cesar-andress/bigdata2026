@@ -80,8 +80,11 @@ pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
 pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
 ```
 
-El igual de `--repo=` es obligatorio. Si la ruta va suelta, pytest la
-confunde con un directorio de tests. También vale
+La opción es `--repo` (no `--test`). Pytest la registra en
+`tests/conftest.py`, así que vale `--repo=/ruta` y también
+`--repo /ruta`. Si pytest responde `unrecognized arguments: --repo`
+o `no option named '--repo'`, estáis con una copia antigua de
+`tests/conftest.py`: volved a copiar ese fichero. También vale
 `DSBD_REPO=/ruta/a/vuestro/clon pytest -q`.
 
 Estos tests no llaman al Banco Mundial ni regeneran `data/` de verdad.
@@ -149,10 +152,13 @@ cierre, ni etiqueta `entrega-02`.
 [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) se borró y se
 volvió a crear. El `main` nuevo es `694c4ff` (4 de noviembre de 2026,
 19:04). Tiene las etiquetas `1.0.0` y `1.0.1`, no `entrega-02`. Copió
-los dos workflows y `tests/`, pero no el `conftest.py` de la raíz ni
-`pytest.ini`. Sus Actions no llegan a evaluar el código: los 65 tests
-del Hito 1 y los 20 del Hito 2 terminan en error (`no option named
-'--repo'`). Medidos desde este repositorio, tampoco pasan. Además,
+los dos workflows y `tests/`, pero el `tests/conftest.py` de esa copia
+llama a `--repo` sin registrarla (el alta estaba entonces en el
+`conftest.py` de la raíz, que no copió). Sus Actions no llegan a
+evaluar el código: los 65 tests del Hito 1 y los 20 del Hito 2
+terminan en error (`no option named '--repo'`). Hace falta volver a
+copiar `tests/conftest.py`. Medidos desde este repositorio, tampoco
+pasan. Además,
 `load_config` abre `country_list.csv` con una ruta relativa al
 directorio de trabajo, y el extract nuevo exige `raise_for_status` en
 la respuesta: tres tests de `runtime` fallan por eso.
@@ -201,9 +207,10 @@ contrato. Verde solo cuando el `pytest` de ese workflow termina sin fallos.
 Esos workflows comprueban **el código de este repositorio**, no el vuestro.
 Copiar los dos YAML, `tests/`, `pytest.ini` y `requirements-dev.txt` a
 vuestro repo hace que las mismas máquinas se disparen en cada push
-vuestro. Mientras no lo copiéis, la forma de ver vuestro estado es la de
-la sección anterior (`--repo=`) o la tabla de más arriba, que actualiza
-el profesor.
+vuestro. `--repo` se declara dentro de `tests/conftest.py`; no hace
+falta el `conftest.py` de la raíz. Mientras no lo copiéis, la forma de
+ver vuestro estado es la de la sección anterior (`--repo`) o la tabla
+de más arriba, que actualiza el profesor.
 
 ## Estructura
 
