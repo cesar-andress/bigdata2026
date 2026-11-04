@@ -1,4 +1,4 @@
-name: Hitos 1 y 2 — comprobaciones
+name: Hito 1 — comprobaciones
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   pytest:
-    name: pytest (Hito 1 y Hito 2)
+    name: pytest (Hito 1)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,7 +26,3 @@ jobs:
 
       - name: Hito 1
         run: pytest -q tests/hito1
-
-      - name: Hito 2
-        if: always()
-        run: pytest -q tests/hito2

@@ -7,8 +7,8 @@ Repositorio de **demostración del profesor** para el bloque Big Data
    sin solución del Hito 1 / T2.
 2. La batería de **tests** del Hito 1 (`tests/hito1/`) y del Hito 2
    (`tests/hito2/`), sobre el contrato de la Entrega 2.
-3. Un **workflow de GitHub Actions** (`.github/workflows/hito1-tests.yml`)
-   que ejecuta `pytest` en cada push y pull request.
+3. Dos **workflows de GitHub Actions**: `hito1-tests.yml` y
+   `hito2-tests.yml`. Cada uno ejecuta su `pytest` en cada push y pull request.
 
 No es la solución de la práctica: es el punto de partida que ya conocéis,
 más la maquinaria de comprobación y CI para que veáis cómo se monta.
@@ -147,41 +147,41 @@ etiqueta `entrega-02`.
 
 ## Cómo funcionan las tareas automatizadas
 
-El fichero `.github/workflows/hito1-tests.yml` es un workflow de
-**GitHub Actions**. No hace falta lanzarlo a mano: GitHub lo lee en
-cuanto entra en el repositorio.
+Hay dos workflows de **GitHub Actions**, uno por hito:
 
-Se dispara en dos casos, y solo en las ramas `main` y `master`:
+- `.github/workflows/hito1-tests.yml` ejecuta `pytest -q tests/hito1`.
+- `.github/workflows/hito2-tests.yml` ejecuta `pytest -q tests/hito2`.
+
+No hace falta lanzarlos a mano: GitHub los lee en cuanto entran en el
+repositorio. Los dos se disparan en los mismos casos, y solo en las
+ramas `main` y `master`:
 
 - un **push** (incluido el que acabáis de hacer);
 - un **pull request** hacia esas ramas.
 
-Entonces GitHub abre una máquina nueva Ubuntu, el job
-`pytest (Hito 1 y Hito 2)`, y ejecuta estos pasos en orden:
+Cada push abre **dos máquinas** Ubuntu, independientes. Si el Hito 1
+falla, el Hito 2 se ejecuta igual. En cada máquina los pasos son:
 
 1. **Checkout.** Clona el commit que ha disparado el workflow.
 2. **Python 3.12.** Instala ese intérprete y guarda la caché de pip
    para no reinstalar desde cero en cada ejecución.
 3. **Dependencias.** `pip install -r requirements.txt -r requirements-dev.txt`
    (`requests`, `pandas`, `PyYAML` y `pytest`).
-4. **Hito 1.** `pytest -q tests/hito1`.
-5. **Hito 2.** `pytest -q tests/hito2`. Este paso lleva `if: always()`,
-   así que se ejecuta aunque el Hito 1 haya fallado. Si no, un fallo
-   del extract ocultaría que también falta el job de Spark.
+4. **El pytest de ese hito.** El del Hito 1 no lanza el del Hito 2, ni al revés.
 
 El resultado queda en la pestaña **Actions** de este repositorio:
 https://github.com/cesar-andress/bigdata2026/actions
-Cada ejecución enseña el commit, la hora y el registro de los dos
-`pytest`. Una cruz roja significa que algún test ha fallado. En este
-repo docente la cruz es esperable: el starter no cumple el contrato.
-Verde solo cuando los dos `pytest` terminan sin fallos.
+Cada ejecución enseña el workflow, el commit, la hora y el registro de
+`pytest`. Una cruz roja significa que algún test de ese hito ha fallado.
+En este repo docente la cruz es esperable: el starter no cumple el
+contrato. Verde solo cuando el `pytest` de ese workflow termina sin fallos.
 
-El workflow comprueba **el código de este repositorio**, no el vuestro.
-Copiar `.github/workflows/hito1-tests.yml`, `tests/`, `pytest.ini` y
-`requirements-dev.txt` a vuestro repo hace que la misma máquina se
-dispare en cada push vuestro. Mientras no lo copiéis, la forma de ver
-vuestro estado es la de la sección anterior (`--repo=`) o la tabla de
-más arriba, que actualiza el profesor.
+Esos workflows comprueban **el código de este repositorio**, no el vuestro.
+Copiar los dos YAML, `tests/`, `pytest.ini` y `requirements-dev.txt` a
+vuestro repo hace que las mismas máquinas se disparen en cada push
+vuestro. Mientras no lo copiéis, la forma de ver vuestro estado es la de
+la sección anterior (`--repo=`) o la tabla de más arriba, que actualiza
+el profesor.
 
 ## Estructura
 
@@ -192,7 +192,8 @@ más arriba, que actualiza el profesor.
 | `data/` | `raw` → `clean` → `serving` (artefactos locales, no versionados) |
 | `tests/hito1/` | Comprobaciones del Hito 1, más la ejecución del ETL actual |
 | `tests/hito2/` | Comprobaciones del Hito 2 (Spark y cierre) |
-| `.github/workflows/` | CI con pytest |
+| `.github/workflows/hito1-tests.yml` | CI del Hito 1 |
+| `.github/workflows/hito2-tests.yml` | CI del Hito 2 |
 
 ## Reglas del framework (no romper)
 
