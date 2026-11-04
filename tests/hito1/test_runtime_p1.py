@@ -9,6 +9,7 @@ fichas y pipeline) cuando se les da un raw mínimo.
 from __future__ import annotations
 
 import ast
+import inspect
 import json
 import sqlite3
 from pathlib import Path
@@ -45,6 +46,42 @@ def etl(repo_root: Path):
 def caja(etl, tmp_path: Path, monkeypatch):
     dirs = sandbox(etl, tmp_path, monkeypatch)
     return etl, dirs
+
+
+def _transformer_recibe_config(fn) -> bool:
+    """El starter pasa Config; otras entregas pasan un contexto propio."""
+    params = list(inspect.signature(fn).parameters.values())
+    if len(params) < 2:
+        return True
+    ann = params[1].annotation
+    if ann is inspect.Parameter.empty:
+        return True
+    return "Config" in getattr(ann, "__name__", str(ann))
+
+
+def _exigir_pipeline_starter(etl):
+    fn = getattr(etl.transform, "transform_countries_profile", None)
+    if fn is None or not _transformer_recibe_config(fn):
+        pytest.skip(
+            "El transform ya no usa la firma del starter (source, Config). "
+            "El contrato del Hito 1 se comprueba en los tests estáticos."
+        )
+
+
+def _parchear_http(monkeypatch, extract, getter):
+    """Cubre requests.get del starter y Session.get de un cliente propio.
+
+    Sin el parche de Session, un extract que pagina el Banco Mundial
+    saldría a la red de verdad.
+    """
+    monkeypatch.setattr(extract.requests, "get", getter)
+
+    def session_get(self, url, timeout=None, **kwargs):
+        headers = dict(getattr(self, "headers", {}) or {})
+        headers.update(kwargs.get("headers") or {})
+        return getter(url, timeout=timeout, headers=headers)
+
+    monkeypatch.setattr(extract.requests.Session, "get", session_get)
 
 
 def _paises(config):
@@ -138,7 +175,10 @@ def test_extract_url_fija_escribe_raw_y_manifiesto(caja, monkeypatch):
         status_code = 200
         content = b'{"ok": true}'
 
-    monkeypatch.setattr(etl.extract.requests, "get", lambda *a, **k: Respuesta())
+        def raise_for_status(self):
+            return None
+
+    _parchear_http(monkeypatch, etl.extract, lambda *a, **k: Respuesta())
     cfg = etl.config.Config(
         sources=[
             etl.config.Source(
@@ -168,13 +208,16 @@ def test_extract_plantilla_una_peticion_por_pais_foco(caja, monkeypatch):
         status_code = 200
         content = b"[1]"
 
+        def raise_for_status(self):
+            return None
+
     def falso_get(url, timeout=None, headers=None):
         vistas.append(url)
         assert headers and "User-Agent" in headers
         assert timeout
         return Respuesta()
 
-    monkeypatch.setattr(etl.extract.requests, "get", falso_get)
+    _parchear_http(monkeypatch, etl.extract, falso_get)
     cfg = etl.config.Config(
         sources=[
             etl.config.Source(
@@ -198,9 +241,16 @@ def test_extract_anota_el_fallo_de_red_en_el_manifiesto(caja, monkeypatch):
     etl, dirs = caja
 
     def falla(url, timeout=None, headers=None):
-        raise requests.RequestException("timeout de prueba")
+        raise requests.ConnectionError("timeout de prueba")
 
-    monkeypatch.setattr(etl.extract.requests, "get", falla)
+    _parchear_http(monkeypatch, etl.extract, falla)
+    if hasattr(etl.extract, "time"):
+        monkeypatch.setattr(etl.extract.time, "sleep", lambda *_a, **_k: None)
+    extra = {}
+    if "http" in inspect.signature(etl.config.Config).parameters and hasattr(etl.config, "HttpConfig"):
+        extra["http"] = etl.config.HttpConfig(
+            max_retries=0, max_requests_per_second=1000, timeout_seconds=1
+        )
     cfg = etl.config.Config(
         sources=[
             etl.config.Source(
@@ -211,8 +261,12 @@ def test_extract_anota_el_fallo_de_red_en_el_manifiesto(caja, monkeypatch):
             )
         ],
         focus_countries=[],
+        **extra,
     )
-    etl.extract.run_extract(cfg)
+    try:
+        etl.extract.run_extract(cfg)
+    except Exception as exc:
+        assert "timeout de prueba" in str(exc)
     texto = dirs["MANIFEST"].read_text(encoding="utf-8")
     assert "timeout de prueba" in texto
     assert not (dirs["RAW"] / "countries_profile.json").exists()
@@ -221,6 +275,7 @@ def test_extract_anota_el_fallo_de_red_en_el_manifiesto(caja, monkeypatch):
 def test_transform_perfil_filtra_foco_y_explota_idiomas(caja):
     """El perfil produce countries y languages; un ISO3 fuera de foco no entra."""
     etl, dirs = caja
+    _exigir_pipeline_starter(etl)
     (dirs["RAW"] / "countries_profile.json").write_text(
         json.dumps(_perfil()), encoding="utf-8"
     )
@@ -241,6 +296,7 @@ def test_transform_perfil_filtra_foco_y_explota_idiomas(caja):
 def test_transform_worldbank_ignora_nulos_de_registro_y_payloads_inutiles(caja):
     """El transformer del Banco Mundial tolera nulls, listas cortas y ficheros ausentes."""
     etl, dirs = caja
+    _exigir_pipeline_starter(etl)
     fuente = etl.config.Source(
         id="worldbank_gdp",
         name="pib",
@@ -269,6 +325,7 @@ def test_transform_worldbank_ignora_nulos_de_registro_y_payloads_inutiles(caja):
 def test_transform_eurostat_celda_unica_y_valor_vacio(caja):
     """Eurostat: una celda entra; un value vacío no fabrica una fila."""
     etl, dirs = caja
+    _exigir_pipeline_starter(etl)
     fuente = etl.config.Source(
         id="eurostat_pop",
         name="poblacion",
@@ -299,6 +356,9 @@ def test_transform_eurostat_celda_unica_y_valor_vacio(caja):
 def test_transform_owid_filtra_anio_de_meta(caja):
     """OWID se queda con el año declarado en meta, no con toda la serie del CSV."""
     etl, dirs = caja
+    if not hasattr(etl.transform, "transform_owid_life_expectancy"):
+        pytest.skip("Este repo no trae el transformer OWID del starter.")
+    _exigir_pipeline_starter(etl)
     (dirs["RAW"] / "owid_life.csv").write_text(
         "Entity,Code,Year,Life expectancy\n"
         "Spain,ESP,2023,83.2\n"
@@ -324,6 +384,9 @@ def test_transform_owid_filtra_anio_de_meta(caja):
 def test_transform_generico_indexa_el_raw(caja):
     """El passthrough registra cada fichero crudo de esa fuente."""
     etl, dirs = caja
+    if not hasattr(etl.transform, "transform_generic_passthrough"):
+        pytest.skip("Este repo no trae el passthrough del starter.")
+    _exigir_pipeline_starter(etl)
     (dirs["RAW"] / "extra.bin").write_bytes(b"abc")
     fuente = etl.config.Source(id="extra", name="extra", format="bin", url="https://example.test/x")
     cfg = etl.config.Config(sources=[fuente], focus_countries=[])
@@ -335,6 +398,7 @@ def test_transform_generico_indexa_el_raw(caja):
 def test_run_transform_escribe_csv_y_huerfanos(caja):
     """run_transform vuelca countries, languages, indicators y join_orphans."""
     etl, dirs = caja
+    _exigir_pipeline_starter(etl)
     (dirs["RAW"] / "countries_profile.json").write_text(json.dumps(_perfil()), encoding="utf-8")
     (dirs["RAW"] / "worldbank_gdp_ES.json").write_text(json.dumps(_wb()), encoding="utf-8")
     cfg = etl.config.Config(
@@ -403,6 +467,7 @@ def test_load_crea_sqlite_y_omite_tablas_ausentes(caja):
 def test_load_y_fichas_desde_clean(caja, monkeypatch):
     """Clean → SQLite → una ficha por país, leyendo solo serving."""
     etl, dirs = caja
+    _exigir_pipeline_starter(etl)
     (dirs["RAW"] / "countries_profile.json").write_text(json.dumps(_perfil()), encoding="utf-8")
     (dirs["RAW"] / "worldbank_gdp_ES.json").write_text(json.dumps(_wb()), encoding="utf-8")
     cfg = etl.config.Config(
@@ -478,6 +543,8 @@ def test_fichas_exigen_base_y_countries_con_filas(caja):
     etl.load.run_load()
     with sqlite3.connect(dirs["DB"]) as conn:
         conn.execute("CREATE TABLE countries (iso3 TEXT)")
+        conn.execute("CREATE TABLE languages (iso3 TEXT)")
+        conn.execute("CREATE TABLE indicators (iso3 TEXT)")
     with pytest.raises(RuntimeError):
         etl.build_cards.run_build_cards()
 
@@ -485,7 +552,11 @@ def test_fichas_exigen_base_y_countries_con_filas(caja):
 def test_pipeline_encadena_las_cuatro_fases(etl, monkeypatch):
     """--skip-extract no llama al extract; --parquet se propaga a load."""
     llamadas: list[object] = []
-    monkeypatch.setattr(etl.pipeline, "run_extract", lambda: llamadas.append("extract"))
+    monkeypatch.setattr(
+        etl.pipeline,
+        "run_extract",
+        lambda *args, **kwargs: llamadas.append("extract"),
+    )
     monkeypatch.setattr(etl.pipeline, "run_transform", lambda: llamadas.append("transform"))
     monkeypatch.setattr(
         etl.pipeline,

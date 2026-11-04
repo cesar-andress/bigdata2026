@@ -33,23 +33,41 @@ def test_respuesta_no_200_no_escribe_raw(repo_root: Path, monkeypatch, tmp_path)
     if hasattr(extract, "RAW"):
         monkeypatch.setattr(extract, "RAW", raw_dir, raising=False)
 
-    if not hasattr(extract, "_download"):
-        pytest.fail(
-            "No se encuentra _download (o equivalente público) en src.extract. "
-            "Hace falta una descarga que distinga éxito de error HTTP."
-        )
-
     fake = MagicMock()
     fake.status_code = 500
     fake.content = b'{"message":"error interno de prueba"}'
-    monkeypatch.setattr(extract.requests, "get", lambda *a, **k: fake)
+    fake.raise_for_status.side_effect = RuntimeError("HTTP 500")
 
-    dest = raw_dir / "probe_error.json"
-    status, _nbytes = extract._download("https://example.invalid/probe", dest)
+    if hasattr(extract, "_download"):
+        monkeypatch.setattr(extract.requests, "get", lambda *a, **k: fake)
+        dest = raw_dir / "probe_error.json"
+        status, _nbytes = extract._download("https://example.invalid/probe", dest)
+        assert status == 500
+        assert not dest.exists(), (
+            "El extract ha escrito en data/raw/ una respuesta con status 500. "
+            "Lo que no sea 200 se anota en el manifiesto y no se guarda como dato."
+        )
+        return
 
-    assert status == 500
-    assert not dest.exists(), (
-        "El extract ha escrito en data/raw/ una respuesta con status 500. "
-        "Según el enunciado, lo que no sea 200 se anota en el manifiesto "
-        "y no se guarda como dato bruto válido."
+    if hasattr(extract, "HttpClient"):
+        http_cls = getattr(extract, "HttpConfig", None)
+        if http_cls is None:
+            config = importlib.import_module("src.config")
+            http_cls = config.HttpConfig
+        cliente = extract.HttpClient(
+            http_cls(max_retries=0, max_requests_per_second=1000, timeout_seconds=1)
+        )
+        monkeypatch.setattr(cliente.session, "get", lambda *a, **k: fake)
+        status, content, _intentos, _nota = cliente.get("https://example.invalid/probe")
+        assert status == 500
+        assert content is None, (
+            "Una respuesta 500 no puede devolverse como cuerpo de dato. "
+            "Solo HTTP 200 se materializa en data/raw/."
+        )
+        assert list(raw_dir.iterdir()) == []
+        return
+
+    pytest.fail(
+        "No se encuentra _download ni HttpClient en src.extract. "
+        "Hace falta una descarga que distinga éxito de error HTTP."
     )

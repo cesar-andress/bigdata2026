@@ -139,6 +139,7 @@ el **11 de noviembre de 2026, a las 23:59**. A fecha de esta tabla,
 | [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `694c4ff` · 04/11/2026 19:04, repo regenerado | 33 passed, 31 failed, 1 skipped | No | 0 passed, 20 failed | No |
 | [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd` · 04/11/2026 12:53 | 45 passed, 19 failed, 1 skipped | No | 0 passed, 20 failed | No |
 | [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | sin commits en `origin` | no se puede ejecutar | No | no se puede ejecutar | No |
+| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `9bcf8c2` · 04/11/2026 18:36 | 53 passed, 3 failed, 9 skipped | No | 1 passed, 19 failed | No |
 
 Lo que sí aguanta en los repos que siguen con el starter es la ejecución
 de la Práctica 1 (`pytest -m runtime`): 26 passed. Eso no cuenta como
@@ -155,6 +156,16 @@ del Hito 1 y los 20 del Hito 2 terminan en error (`no option named
 `load_config` abre `country_list.csv` con una ruta relativa al
 directorio de trabajo, y el extract nuevo exige `raise_for_status` en
 la respuesta: tres tests de `runtime` fallan por eso.
+
+[uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026)
+está más avanzado que el resto (paginación del Banco Mundial, seis
+indicadores, Parquet Hive, criterio de país). Aun así no pasa. En el
+Hito 1 faltan `CONTRIBUTORS.md`, la columna `source_code` en
+`excluded_entities.csv` (ahora se llama `code`) y un User-Agent de
+equipo: el que hay dice `CAMBIAD_ESTO`. En el Hito 2 falta casi todo
+el cierre: no hay `spark/job_01.py`, ni `ENTREGA_02.md`, ni `BUGS.md`,
+ni `evidencias/`, ni la etiqueta `entrega-02`. El `.gitignore` sí deja
+fuera `logs/`.
 
 ## Cómo funcionan las tareas automatizadas
 
