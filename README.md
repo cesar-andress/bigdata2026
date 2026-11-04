@@ -12,6 +12,83 @@ Repositorio de **demostración del profesor** para el bloque Big Data
 
 No es la solución de la práctica: es el punto de partida que ya conocéis,
 más la maquinaria de comprobación y CI para que veáis cómo se monta.
+El trabajo se hace en **vuestro** repositorio de equipo, no en este.
+
+## Qué tenéis que hacer
+
+El código de este repo es el de la Práctica 1. La Entrega 2 lo amplía.
+Los tests de `tests/hito1/` y `tests/hito2/` leen ese código y dicen si
+el contrato está cumplido. Un solo fallo y el hito no pasa.
+
+### Hito 1 · 4 de noviembre de 2026
+
+En vuestro repo, sobre el mismo ETL (`src/`, `sources.yaml`):
+
+1. **Extract a escala.** Al menos seis indicadores del Banco Mundial,
+   con `NY.GDP.PCAP.CD` y `SP.POP.TOTL` fijos y la serie completa
+   (no `mrnev=1` ni una petición por país del foco). Paginación que
+   cuadre con el `total` de la API. Lo que no sea HTTP 200 no se guarda
+   en `data/raw/`. Reintentos con espera ante 429, 5xx y timeouts; un
+   404 no se reintenta. La segunda ejecución no vuelve a descargar lo
+   que ya está bien, salvo `--force`. El manifiesto es acumulativo y
+   cada fila lleva `run_id`. Como mucho cinco peticiones por segundo,
+   con un `User-Agent` que identifique a vuestro equipo.
+2. **Universo y transform tipado.** Criterio de país, `countries.parquet`,
+   `languages.parquet` y `excluded_entities.csv`. Equivalencias de código
+   en la configuración. Indicadores con el esquema del enunciado, `year`
+   entero, nulo si falta el dato, y error si se repite
+   `(iso3, indicator_id, year, source_id)`. Huérfanos en
+   `join_orphans.csv` por fuente e indicador.
+3. **Parquet Hive** en `data/clean/indicators/indicator_id=<id>/`.
+   `pyarrow` (o `fastparquet`) declarado en `requirements.txt`.
+4. **Fichas** regeneradas desde `clean/` → SQLite, una por país, con la
+   mediana de la región en el mismo indicador y el mismo año.
+5. **`CONTRIBUTORS.md`** en la raíz del repo: nombre, apellidos y correo
+   institucional `@…ucjc.edu`.
+
+`pytest -m runtime` solo comprueba que la Práctica 1 sigue pudiendo
+ejecutarse. Eso no sustituye al Hito 1.
+
+### Hito 2 · 11 de noviembre de 2026, 23:59
+
+Además de lo anterior:
+
+1. **`spark/job_01.py`**, arrancable con `python spark/job_01.py`.
+   Lee `data/clean/indicators`, calcula la cobertura por indicador y
+   década tres veces (RDD al estilo MapReduce, DataFrame y Spark SQL)
+   y la compara con el SQLite de `serving/`. Si no coinciden, el proceso
+   sale con código distinto de 0. Escribe
+   `data/serving/spark/cobertura_decada/` en Parquet, imprime el plan
+   físico y el número de particiones, y deja el event log en
+   `logs/spark-events/`.
+2. **Pieza B.** `ENTREGA_02.md` (predicción, resultado, decisiones,
+   evidencia, las tres preguntas de teoría y pendientes) y `BUGS.md`
+   con al menos tres defectos (reproducción, efecto y arreglo).
+3. **Pieza C.** El event log copiado en `evidencias/`.
+4. **`.gitignore`** con `data/`, `logs/` y `.venv/`.
+5. **Etiqueta** `entrega-02` en el repositorio (`git tag -a entrega-02`
+   y `git push origin entrega-02`). La fecha de esa etiqueta en GitHub
+   es la marca de la entrega.
+
+### Cómo comprobarlo en vuestro código
+
+Desde un clon de **este** repositorio, sin copiar `tests/` al vuestro:
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
+pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
+```
+
+El igual de `--repo=` es obligatorio. Si la ruta va suelta, pytest la
+confunde con un directorio de tests. También vale
+`DSBD_REPO=/ruta/a/vuestro/clon pytest -q`.
+
+Estos tests no llaman al Banco Mundial ni regeneran `data/` de verdad.
+Los de contrato leen vuestro código y `sources.yaml`. Los marcados
+`runtime` ejecutan el ETL con ficheros mínimos y la red simulada, en un
+directorio temporal. La prueba de aula sigue siendo la del enunciado:
+clon limpio, `python -m src.pipeline` dos veces y `python spark/job_01.py`.
 
 ## Arranque local del ETL
 
@@ -41,25 +118,8 @@ pytest -q -m runtime           # solo lo que el código de la práctica 1 ya deb
 ```
 
 Sobre el starter original **los tests de contrato fallan a propósito**.
-El Hito 1 mira extract a escala, idempotencia, transform tipado, Parquet
-Hive, fichas y `CONTRIBUTORS.md`. El Hito 2 mira `spark/job_01.py`,
-la coincidencia RDD / DataFrame / SQL / SQLite, `BUGS.md`,
-`ENTREGA_02.md`, `evidencias/` y la etiqueta `entrega-02`.
-
-Los marcados `runtime` ejecutan `src/` con datos mínimos y sin red. Tienen
-que pasar también sobre el código de la Práctica 1, antes de cumplir el
-Hito 1.
-
-Para lanzar la misma batería contra otro clon, sin copiar `tests/` dentro:
-
-```bash
-pytest -q --repo=/ruta/al/clon
-# o
-DSBD_REPO=/ruta/al/clon pytest -q
-```
-
-El igual en `--repo=` importa: si la ruta va como argumento suelto, pytest
-la toma por un directorio de tests.
+El detalle de qué mira cada hito, y cómo lanzar la batería contra
+vuestro clon, está en «Qué tenéis que hacer».
 
 ## Estado de los equipos (4 de noviembre de 2026)
 
@@ -85,11 +145,43 @@ Práctica 1 (`pytest -m runtime`): 26 passed. Eso no cuenta como Hito 1.
 El Hito 2 está a cero en todos: no hay `spark/job_01.py`, ni cierre, ni
 etiqueta `entrega-02`.
 
-## GitHub Actions
+## Cómo funcionan las tareas automatizadas
 
-El workflow `Hitos 1 y 2 — comprobaciones` instala dependencias y lanza
-`pytest` en Ubuntu, primero el Hito 1 y después el Hito 2. En la pestaña
-**Actions** del repositorio podéis ver la ejecución automática tras cada push.
+El fichero `.github/workflows/hito1-tests.yml` es un workflow de
+**GitHub Actions**. No hace falta lanzarlo a mano: GitHub lo lee en
+cuanto entra en el repositorio.
+
+Se dispara en dos casos, y solo en las ramas `main` y `master`:
+
+- un **push** (incluido el que acabáis de hacer);
+- un **pull request** hacia esas ramas.
+
+Entonces GitHub abre una máquina nueva Ubuntu, el job
+`pytest (Hito 1 y Hito 2)`, y ejecuta estos pasos en orden:
+
+1. **Checkout.** Clona el commit que ha disparado el workflow.
+2. **Python 3.12.** Instala ese intérprete y guarda la caché de pip
+   para no reinstalar desde cero en cada ejecución.
+3. **Dependencias.** `pip install -r requirements.txt -r requirements-dev.txt`
+   (`requests`, `pandas`, `PyYAML` y `pytest`).
+4. **Hito 1.** `pytest -q tests/hito1`.
+5. **Hito 2.** `pytest -q tests/hito2`. Este paso lleva `if: always()`,
+   así que se ejecuta aunque el Hito 1 haya fallado. Si no, un fallo
+   del extract ocultaría que también falta el job de Spark.
+
+El resultado queda en la pestaña **Actions** de este repositorio:
+https://github.com/cesar-andress/bigdata2026/actions
+Cada ejecución enseña el commit, la hora y el registro de los dos
+`pytest`. Una cruz roja significa que algún test ha fallado. En este
+repo docente la cruz es esperable: el starter no cumple el contrato.
+Verde solo cuando los dos `pytest` terminan sin fallos.
+
+El workflow comprueba **el código de este repositorio**, no el vuestro.
+Copiar `.github/workflows/hito1-tests.yml`, `tests/`, `pytest.ini` y
+`requirements-dev.txt` a vuestro repo hace que la misma máquina se
+dispare en cada push vuestro. Mientras no lo copiéis, la forma de ver
+vuestro estado es la de la sección anterior (`--repo=`) o la tabla de
+más arriba, que actualiza el profesor.
 
 ## Estructura
 
