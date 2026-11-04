@@ -136,14 +136,25 @@ el **11 de noviembre de 2026, a las 23:59**. A fecha de esta tabla,
 | [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `16f1941` · 28/10/2026 | 34 passed, 30 failed, 1 skipped | No | 0 passed, 20 failed | No |
 | [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `dd59cee` · 28/10/2026 | 34 passed, 30 failed, 1 skipped | No | 0 passed, 20 failed | No |
 | [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ba06a3b` · 28/10/2026 | 33 passed, 30 failed, 2 skipped | No | 0 passed, 20 failed | No |
-| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `5430089` · 04/11/2026 15:45 | 33 passed, 31 failed, 1 skipped | No | 0 passed, 20 failed | No |
+| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `694c4ff` · 04/11/2026 19:04, repo regenerado | 33 passed, 31 failed, 1 skipped | No | 0 passed, 20 failed | No |
 | [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd` · 04/11/2026 12:53 | 45 passed, 19 failed, 1 skipped | No | 0 passed, 20 failed | No |
 | [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | sin commits en `origin` | no se puede ejecutar | No | no se puede ejecutar | No |
 
-Lo que sí aguanta en los cinco repos con código es la ejecución de la
-Práctica 1 (`pytest -m runtime`): 26 passed. Eso no cuenta como Hito 1.
-El Hito 2 está a cero en todos: no hay `spark/job_01.py`, ni cierre, ni
-etiqueta `entrega-02`.
+Lo que sí aguanta en los repos que siguen con el starter es la ejecución
+de la Práctica 1 (`pytest -m runtime`): 26 passed. Eso no cuenta como
+Hito 1. El Hito 2 está a cero en todos: no hay `spark/job_01.py`, ni
+cierre, ni etiqueta `entrega-02`.
+
+[hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) se borró y se
+volvió a crear. El `main` nuevo es `694c4ff` (4 de noviembre de 2026,
+19:04). Tiene las etiquetas `1.0.0` y `1.0.1`, no `entrega-02`. Copió
+los dos workflows y `tests/`, pero no el `conftest.py` de la raíz ni
+`pytest.ini`. Sus Actions no llegan a evaluar el código: los 65 tests
+del Hito 1 y los 20 del Hito 2 terminan en error (`no option named
+'--repo'`). Medidos desde este repositorio, tampoco pasan. Además,
+`load_config` abre `country_list.csv` con una ruta relativa al
+directorio de trabajo, y el extract nuevo exige `raise_for_status` en
+la respuesta: tres tests de `runtime` fallan por eso.
 
 ## Cómo funcionan las tareas automatizadas
 

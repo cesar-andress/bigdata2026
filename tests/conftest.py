@@ -71,7 +71,12 @@ def _raiz_por_defecto() -> Path:
 @pytest.fixture(scope="session")
 def repo_root(request) -> Path:
     """Raíz del proyecto ETL que se está comprobando."""
-    explicito = request.config.getoption("--repo") or os.environ.get("DSBD_REPO")
+    try:
+        explicito = request.config.getoption("--repo")
+    except ValueError:
+        # tests/ copiado sin el conftest.py de la raíz: la opción no existe.
+        explicito = None
+    explicito = explicito or os.environ.get("DSBD_REPO")
     if explicito:
         return _resolver_raiz(Path(explicito))
     return _raiz_por_defecto()
