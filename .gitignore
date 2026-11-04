@@ -11,3 +11,7 @@ cards/*
 !cards/.gitkeep
 informe/*
 !informe/.gitkeep
+
+.pytest_cache/
+__pycache__/
+*.pyc
