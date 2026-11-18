@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Rechaza el commit si el mensaje aún acredita a otro autor o a un bot.
+set -euo pipefail
+msg_file=${1:?}
+
+if grep -qiE '^[[:space:]]*Co-authored-by:' "$msg_file"; then
+  echo "commit-msg: prohibido cualquier Co-authored-by (solo César Andrés)" >&2
+  exit 1
+fi
+
+if grep -qiE 'cursoragent@|[Cc]o-authored-by:[[:space:]]*[Cc]ursor|@aiserv\.|copilot@' "$msg_file"; then
+  echo "commit-msg: identidad de Cursor/bot/aiserv prohibida en el mensaje" >&2
+  exit 1
+fi
+
+# Ningún email en el cuerpo salvo, como mucho, mención docente ya conocida.
+# Bloquear otros emails de autoría típicos.
+if grep -qiE '<[^>]+@[^>]+>' "$msg_file"; then
+  if ! grep -qiE '<cesar\.andress@ucjc\.edu>' "$msg_file"; then
+    # Hay emails y ninguno es el docente → sospechoso de coautoría
+    if grep -qiE '<[^>]+@[^>]+>' "$msg_file" | head -1 >/dev/null; then
+      other=$(grep -oiE '<[^>]+@[^>]+>' "$msg_file" | grep -vi 'cesar\.andress@ucjc\.edu' || true)
+      if [[ -n "${other}" ]]; then
+        echo "commit-msg: email no permitido en el mensaje:" >&2
+        echo "$other" >&2
+        exit 1
+      fi
+    fi
+  else
+    other=$(grep -oiE '<[^>]+@[^>]+>' "$msg_file" | grep -vi 'cesar\.andress@ucjc\.edu' || true)
+    if [[ -n "${other}" ]]; then
+      echo "commit-msg: solo se admite <cesar.andress@ucjc.edu>; encontrado:" >&2
+      echo "$other" >&2
+      exit 1
+    fi
+  fi
+fi

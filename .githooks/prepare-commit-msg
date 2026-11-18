@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Quita cualquier Co-authored-by antes de cerrar el mensaje (Cursor u otros).
+set -euo pipefail
+msg_file=${1:?}
+tmp=$(mktemp)
+# Eliminar TODOS los trailers Co-authored-by (un solo autor permitido).
+grep -viE '^[[:space:]]*Co-authored-by:' "$msg_file" > "$tmp" || true
+# También líneas sueltas con emails de bots por si no van como trailer.
+grep -viE 'cursoragent@|cursor\.com>|@aiserv\.|copilot@' "$tmp" > "${tmp}.2" || true
+awk 'BEGIN{n=0} {lines[++n]=$0} END{while(n>0 && lines[n]~/^[[:space:]]*$/) n--; for(i=1;i<=n;i++) print lines[i]}' \
+  "${tmp}.2" > "$msg_file"
+rm -f "$tmp" "${tmp}.2"

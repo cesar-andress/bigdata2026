@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
+kit_sesion_19.zip
 data/raw/*
 !data/raw/.gitkeep
 data/clean/*

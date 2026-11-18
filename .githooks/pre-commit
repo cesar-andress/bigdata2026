@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Solo un autor: César Andrés <cesar.andress@ucjc.edu>. Nadie más.
+set -euo pipefail
+REQUIRED_EMAIL='cesar.andress@ucjc.edu'
+REQUIRED_NAME='César Andrés'
+
+email_from_ident() {
+  sed -n 's/.*<\([^>]*\)>.*/\1/p'
+}
+
+name_from_ident() {
+  sed -n 's/^\([^<]*\) <.*/\1/p' | sed 's/[[:space:]]*$//'
+}
+
+author_email=$(git var GIT_AUTHOR_IDENT 2>/dev/null | email_from_ident || true)
+committer_email=$(git var GIT_COMMITTER_IDENT 2>/dev/null | email_from_ident || true)
+author_name=$(git var GIT_AUTHOR_IDENT 2>/dev/null | name_from_ident || true)
+committer_name=$(git var GIT_COMMITTER_IDENT 2>/dev/null | name_from_ident || true)
+local_email=$(git config --local --get user.email 2>/dev/null || true)
+local_name=$(git config --local --get user.name 2>/dev/null || true)
+
+fail() {
+  echo "pre-commit: $*" >&2
+  echo "  git config --local user.email ${REQUIRED_EMAIL}" >&2
+  echo "  git config --local user.name '${REQUIRED_NAME}'" >&2
+  echo "  unset GIT_AUTHOR_EMAIL GIT_AUTHOR_NAME GIT_COMMITTER_EMAIL GIT_COMMITTER_NAME" >&2
+  exit 1
+}
+
+[[ "$author_email" == "$REQUIRED_EMAIL" ]] || fail "autor debe ser ${REQUIRED_EMAIL} (ahora: '${author_email:-<vacío>}')"
+[[ "$committer_email" == "$REQUIRED_EMAIL" ]] || fail "committer debe ser ${REQUIRED_EMAIL} (ahora: '${committer_email:-<vacío>}')"
+[[ "$local_email" == "$REQUIRED_EMAIL" ]] || fail "user.email local debe ser ${REQUIRED_EMAIL} (ahora: '${local_email:-<vacío>}')"
+[[ "$local_name" == "$REQUIRED_NAME" ]] || fail "user.name local debe ser '${REQUIRED_NAME}' (ahora: '${local_name:-<vacío>}')"
+[[ "$author_name" == "$REQUIRED_NAME" ]] || fail "nombre de autor debe ser '${REQUIRED_NAME}' (ahora: '${author_name:-<vacío>}')"
+[[ "$committer_name" == "$REQUIRED_NAME" ]] || fail "nombre de committer debe ser '${REQUIRED_NAME}' (ahora: '${committer_name:-<vacío>}')"
+
+combined="${author_email}${committer_email}${local_email}${author_name}${committer_name}${local_name}"
+case "$combined" in
+  *[Cc]ursor*|*[Cc]ursor[Aa]gent*|*aiserv*|*copilot*|*github-actions*|*noreply.github.com*)
+    fail "identidad prohibida (Cursor/bot/aiserv/noreply) en author/committer/config"
+    ;;
+esac

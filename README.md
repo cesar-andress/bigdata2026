@@ -14,6 +14,40 @@ No es la solución de la práctica: es el punto de partida que ya conocéis,
 más la maquinaria de comprobación y CI para que veáis cómo se monta.
 El trabajo se hace en **vuestro** repositorio de equipo, no en este.
 
+## Lo nuevo · 18 de noviembre de 2026 (sesión 19)
+
+Hoy en aula es el **Tema VII**: Spark Structured Streaming (estado,
+checkpointing y recuperación) en DataLab. Este repo es la fuente de
+«lo nuevo» para comprobar entregas y orientar la sesión.
+
+### Qué descargar / actualizar
+
+```bash
+git clone https://github.com/cesar-andress/bigdata2026.git
+# si ya lo teníais:
+cd bigdata2026 && git pull --ff-only
+```
+
+También podéis pedir al profesor el `kit_sesion_19.zip` (`make kit-hoy`
+en este clon): tests, workflows, `SESION_19.md` y dependencias.
+
+Leed primero **[`SESION_19.md`](SESION_19.md)** (checklist de aula:
+batch ↔ streaming, tres memorias, checkpoint
+`~/checkpoints/temp-stream`, Kafka `127.0.0.1:9092` / `sensores.temp`).
+
+### Cómo lanzar los tests contra vuestro clon
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt   # pyarrow incluido
+pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
+pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
+# o: make test-hito1 REPO=/ruta/a/vuestro/clon
+```
+
+La opción es `--repo` (registrada en `tests/conftest.py`). Un solo
+fallo = el hito no pasa. Detalle de la sesión y del estado por equipo:
+más abajo y en `SESION_19.md`.
+
 ## Qué tenéis que hacer
 
 El código de este repo es el de la Práctica 1. La Entrega 2 lo amplía.
@@ -126,10 +160,12 @@ vuestro clon, está en «Qué tenéis que hacer».
 
 ## Sesión de hoy · 18 de noviembre de 2026 (sesión 19)
 
+Checklist corto y comandos de descarga: **[`SESION_19.md`](SESION_19.md)**.
+
 Hoy en aula es el **Tema VII**: arquitectura del cómputo continuo en
 **Spark Structured Streaming** (estado, checkpointing y recuperación),
 sobre DataLab (`admin@datalab`), Kafka en `127.0.0.1:9092` y el topic
-`sensores.temp`.
+`sensores.temp`. Checkpoint de aula: `~/checkpoints/temp-stream`.
 
 ### Qué se os va a pedir en la sesión
 
@@ -150,18 +186,6 @@ sobre DataLab (`admin@datalab`), Kafka en `127.0.0.1:9092` y el topic
 Quien aún no cierra la Entrega 2: el puente de aula es ese contraste.
 El checklist de más abajo indica el arreglo mínimo para que
 `pytest tests/hito1` y `tests/hito2` pasen a cero fallos en vuestro clon.
-
-### Cómo comprobarlo antes de pedir revisión
-
-```bash
-# desde un clon de este repo docente
-pip install -r requirements.txt -r requirements-dev.txt
-pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
-pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
-```
-
-Hace falta `pyarrow` (ya va en `requirements.txt` de este repo). Un solo
-fallo = el hito no está cumplido.
 
 ## Estado de los equipos (18 de noviembre de 2026)
 
@@ -304,11 +328,14 @@ de más arriba, que actualiza el profesor.
 
 | Ruta | Contenido |
 | --- | --- |
+| `SESION_19.md` | Checklist de aula (18/11 · Structured Streaming) |
+| `Makefile` | `deps`, `test-hito1`/`test-hito2` con `REPO=…`, `kit-hoy` |
 | `src/` | Extract / transform / load / fichas |
 | `sources.yaml` | Fuentes y países foco |
 | `data/` | `raw` → `clean` → `serving` (artefactos locales, no versionados) |
 | `tests/hito1/` | Comprobaciones del Hito 1, más la ejecución del ETL actual |
 | `tests/hito2/` | Comprobaciones del Hito 2 (Spark y cierre) |
+| `tests/conftest.py` | Registra `--repo` / `DSBD_REPO` |
 | `.github/workflows/hito1-tests.yml` | CI del Hito 1 |
 | `.github/workflows/hito2-tests.yml` | CI del Hito 2 |
 
