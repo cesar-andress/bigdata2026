@@ -1,9 +1,10 @@
 # Sesión 19 · 18 de noviembre de 2026 · Tema VII
 
 Checklist de aula para **Spark Structured Streaming** (estado,
-checkpointing y recuperación). El material teórico vive en el capítulo
-de la sesión; este fichero solo orienta qué descargar y qué demostrar
-hoy. No inventa capturas ni cifras de laboratorio.
+checkpointing y recuperación). El material de diapositivas de aula es
+`sesiones/sesion_19_tema_07.pdf` en el monorepo del curso; el capítulo
+desarrolla la prosa. Este fichero solo orienta qué descargar y qué
+demostrar hoy. No inventa capturas ni cifras de laboratorio.
 
 ## Entorno de aula (ficha)
 
