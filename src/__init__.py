@@ -1,1 +1,1 @@
-"""Framework mínimo ETL (raw → clean → serving) — Práctica 1 DSBD."""
+"""Framework mínimo ETL (raw, clean y serving): Práctica 1 DSBD."""

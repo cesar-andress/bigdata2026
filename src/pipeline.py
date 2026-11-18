@@ -1,4 +1,4 @@
-"""Orquestación: raw → clean → serving → cards.
+"""Orquestación: raw, clean, serving y cards.
 
 Uso (desde practica_01_starter/):
 

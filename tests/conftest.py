@@ -44,6 +44,10 @@ def pytest_configure(config):
     )
     config.addinivalue_line(
         "markers",
+        "s19: sesión 19 (18/11): query temp-stream y ACTA_S19.md",
+    )
+    config.addinivalue_line(
+        "markers",
         "runtime: ejecuta el código actual del ETL (práctica 1) sin red",
     )
 

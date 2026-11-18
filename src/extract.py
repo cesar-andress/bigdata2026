@@ -1,4 +1,4 @@
-"""Extract: descarga intacta → data/raw/ + manifiesto.
+"""Extract: descarga intacta en data/raw/ + manifiesto.
 
 No transforma. Añadir una URL nueva = entrada en sources.yaml.
 """
@@ -77,7 +77,7 @@ def run_extract(cfg: Config | None = None) -> Path:
     ensure_dirs()
     all_rows: list[dict] = []
     for source in cfg.sources:
-        print(f"[extract] {source.id} — {source.name}")
+        print(f"[extract] {source.id}: {source.name}")
         all_rows.extend(extract_source(source, cfg))
 
     fieldnames = [
@@ -96,7 +96,7 @@ def run_extract(cfg: Config | None = None) -> Path:
         writer.writeheader()
         writer.writerows(all_rows)
 
-    print(f"[extract] manifiesto → {MANIFEST}")
+    print(f"[extract] manifiesto en {MANIFEST}")
     return MANIFEST
 
 

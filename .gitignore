@@ -16,3 +16,6 @@ informe/*
 .pytest_cache/
 __pycache__/
 *.pyc
+
+# Fuente LaTeX de las diapositivas (solo local)
+presentacion/

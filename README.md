@@ -1,9 +1,9 @@
-# bigdata2026 — repositorio docente (DSBD)
+# bigdata2026: repositorio docente (DSBD)
 
 Repositorio de **demostración del profesor** para el bloque Big Data
 (curso 2026/27). Contiene:
 
-1. El **código de la primera entrega** (starter ETL `raw → clean → serving`),
+1. El **código de la primera entrega** (starter ETL `raw, clean y serving`),
    sin solución del Hito 1 / T2.
 2. La batería de **tests** del Hito 1 (`tests/hito1/`) y del Hito 2
    (`tests/hito2/`), sobre el contrato de la Entrega 2.
@@ -14,7 +14,7 @@ No es la solución de la práctica: es el punto de partida que ya conocéis,
 más la maquinaria de comprobación y CI para que veáis cómo se monta.
 El trabajo se hace en **vuestro** repositorio de equipo, no en este.
 
-## Lo nuevo · 18 de noviembre de 2026 (sesión 19)
+## Lo nuevo: 18 de noviembre de 2026 (sesión 19)
 
 Hoy en aula es el **Tema VII**: Spark Structured Streaming (estado,
 checkpointing y recuperación) en DataLab. Este repo es la fuente de
@@ -29,11 +29,17 @@ cd bigdata2026 && git pull --ff-only
 ```
 
 También podéis pedir al profesor el `kit_sesion_19.zip` (`make kit-hoy`
-en este clon): tests, workflows, `SESION_19.md`, `ENCARGO_S19.md` y
-dependencias.
+en este clon): tests, workflows, `streaming/`, `SESION_19.md`,
+`ENCARGO_S19.md`, el PDF de aula y dependencias.
+
+**Nuevo hoy:** [`SESION_19_aula.pdf`](SESION_19_aula.pdf) (las
+diapositivas), `streaming/temp_stream.py` (starter T1 a T6 que
+implementáis en vuestro repo), `streaming/publicar_control.sh`,
+`streaming/publicar_trampas.sh` (reto sorpresa) y `tests/s19/`.
+Lo que hay que entregar: [`ENCARGO_S19.md`](ENCARGO_S19.md).
 
 Leed primero **[`SESION_19.md`](SESION_19.md)** (checklist de aula:
-batch ↔ streaming, tres memorias, checkpoint
+batch frente a streaming, tres memorias, checkpoint
 `~/checkpoints/temp-stream`, Kafka `127.0.0.1:9092` / `sensores.temp`).
 
 ### Cómo lanzar los tests contra vuestro clon
@@ -42,6 +48,7 @@ batch ↔ streaming, tres memorias, checkpoint
 pip install -r requirements.txt -r requirements-dev.txt   # pyarrow incluido
 pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
 pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
+pytest -q tests/s19   --repo=/ruta/a/vuestro/clon   # nuevo hoy
 # o: make test-hito1 REPO=/ruta/a/vuestro/clon
 ```
 
@@ -55,7 +62,7 @@ El código de este repo es el de la Práctica 1. La Entrega 2 lo amplía.
 Los tests de `tests/hito1/` y `tests/hito2/` leen ese código y dicen si
 el contrato está cumplido. Un solo fallo y el hito no pasa.
 
-### Hito 1 · 4 de noviembre de 2026
+### Hito 1: 4 de noviembre de 2026
 
 En vuestro repo, sobre el mismo ETL (`src/`, `sources.yaml`):
 
@@ -76,7 +83,7 @@ En vuestro repo, sobre el mismo ETL (`src/`, `sources.yaml`):
    `join_orphans.csv` por fuente e indicador.
 3. **Parquet Hive** en `data/clean/indicators/indicator_id=<id>/`.
    `pyarrow` (o `fastparquet`) declarado en `requirements.txt`.
-4. **Fichas** regeneradas desde `clean/` → SQLite, una por país, con la
+4. **Fichas** regeneradas desde `clean/` a SQLite, una por país, con la
    mediana de la región en el mismo indicador y el mismo año.
 5. **`CONTRIBUTORS.md`** en la raíz del repo: nombre, apellidos y correo
    institucional `@…ucjc.edu`.
@@ -84,7 +91,7 @@ En vuestro repo, sobre el mismo ETL (`src/`, `sources.yaml`):
 `pytest -m runtime` solo comprueba que la Práctica 1 sigue pudiendo
 ejecutarse. Eso no sustituye al Hito 1.
 
-### Hito 2 · 11 de noviembre de 2026, 23:59
+### Hito 2: 11 de noviembre de 2026, 23:59
 
 Además de lo anterior:
 
@@ -137,8 +144,8 @@ pip install -r requirements.txt
 python -m src.pipeline
 ```
 
-Pasos sueltos: `python -m src.extract` · `python -m src.transform` ·
-`python -m src.load` · `python -m src.build_cards`.
+Pasos sueltos: `python -m src.extract`, `python -m src.transform` ·
+`python -m src.load`, `python -m src.build_cards`.
 
 Reutilizar descargas ya hechas:
 
@@ -159,34 +166,16 @@ Sobre el starter original **los tests de contrato fallan a propósito**.
 El detalle de qué mira cada hito, y cómo lanzar la batería contra
 vuestro clon, está en «Qué tenéis que hacer».
 
-## Sesión de hoy · 18 de noviembre de 2026 (sesión 19)
+## Sesión de hoy: 18 de noviembre de 2026 (sesión 19)
 
-Checklist corto y comandos de descarga: **[`SESION_19.md`](SESION_19.md)**.
+Hoy escribís un programa Spark que no termina: lee los mensajes de tres
+termómetros desde Kafka y cuenta cuántos manda cada uno por minuto. Si lo
+paráis y lo arrancáis, tiene que saber por dónde iba gracias a su
+checkpoint, la carpeta `~/checkpoints/temp-stream`.
 
-Hoy en aula es el **Tema VII**: arquitectura del cómputo continuo en
-**Spark Structured Streaming** (estado, checkpointing y recuperación),
-sobre DataLab (`admin@datalab`), Kafka en `127.0.0.1:9092` y el topic
-`sensores.temp`. Checkpoint de aula: `~/checkpoints/temp-stream`.
-
-### Qué se os va a pedir en la sesión
-
-1. **Contraste batch ↔ streaming.** El `spark/job_01.py` de la Entrega 2
-   es un job *batch*: lee Parquet, calcula, escribe y termina. El query
-   de hoy permanece activo: micro-lotes, progreso y, si hay agregación
-   por ventana, estado. Misma familia Spark; ciclo de vida distinto.
-2. **Demostrar continuidad, no solo filas.** Tras un `stop` y un nuevo
-   arranque con la **misma** `checkpointLocation`
-   (`~/checkpoints/temp-stream`), el query debe reanudar progreso (y
-   estado de ventanas si aplica). Ver filas en consola **no** basta.
-3. **Nombrar las tres memorias:** progreso (hasta dónde se leyó),
-   estado (agregados abiertos) y checkpoint (dónde sobreviven).
-4. **No confundir** `startingOffsets=earliest` / `latest` sin checkpoint
-   con «recuperación». Sin checkpoint estable, cada arranque es un
-   primer día.
-
-Quien aún no cierra la Entrega 2: el puente de aula es ese contraste.
-El checklist de más abajo indica el arreglo mínimo para que
-`pytest tests/hito1` y `tests/hito2` pasen a cero fallos en vuestro clon.
+La historia completa está en [`SESION_19_aula.pdf`](SESION_19_aula.pdf).
+Los tres pasos (A, B y C) están en [`ENCARGO_S19.md`](ENCARGO_S19.md), y
+los datos de DataLab, en [`SESION_19.md`](SESION_19.md).
 
 ## Estado de los equipos (18 de noviembre de 2026)
 
@@ -194,18 +183,18 @@ Comprobado hoy contra la rama por defecto de cada GitHub, con
 `pytest tests/hito1` y `pytest tests/hito2` de este repositorio
 (`pyarrow` instalado). **Pasar** = cero fallos.
 
-Límites oficiales: Hito 1 · **4/11/2026**; Hito 2 · **11/11/2026 23:59**
+Límites oficiales: Hito 1, **4/11/2026**; Hito 2, **11/11/2026 23:59**
 (marca = fecha de la etiqueta anotada `entrega-02` en GitHub).
 
 | Repositorio | Commit / situación | Hito 1 | ¿Pasa? | Hito 2 | ¿Pasa? | `entrega-02` |
 | --- | --- | --- | --- | --- | --- | --- |
-| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ca0cafd` · 11/11/2026 | 65 passed | **Sí** | 20 passed | **Sí** | sí (11/11 10:16) |
-| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `3b9282f` · 17/11/2026 | 64 passed, 1 failed | No | 2 passed, 18 failed | No | no |
-| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `9bcf8c2` · 04/11/2026 | 53 passed, 3 failed, 9 skipped | No | 1 passed, 19 failed | No | no |
-| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd` · 04/11/2026 (código bajo `practica_01_BigData_starter/`) | 47 passed, 17 failed, 1 skipped | No | 0 passed, 20 failed | No | no |
-| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `3b2cc43` · 04/11/2026 | 36 passed, 29 failed | No | 1 passed, 19 failed | No | no |
-| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | — |
-| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | — |
+| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ca0cafd`, 11/11/2026 | 65 passed | **Sí** | 20 passed | **Sí** | sí (11/11 10:16) |
+| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `3b9282f`, 17/11/2026 | 64 passed, 1 failed | No | 2 passed, 18 failed | No | no |
+| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `9bcf8c2`, 04/11/2026 | 53 passed, 3 failed, 9 skipped | No | 1 passed, 19 failed | No | no |
+| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd`, 04/11/2026 (código bajo `practica_01_BigData_starter/`) | 47 passed, 17 failed, 1 skipped | No | 0 passed, 20 failed | No | no |
+| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `3b2cc43`, 04/11/2026 | 36 passed, 29 failed | No | 1 passed, 19 failed | No | no |
+| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | no |
+| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | no |
 
 Solo un equipo cumple hoy ambos hitos con etiqueta de entrega.
 El resto: o bien queda un fallo de contrato, o el cierre del Hito 2
@@ -213,14 +202,14 @@ no está, o el repositorio ya no es público / no existe.
 
 ## Problemas y arreglos (para pasar los tests)
 
-### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) — cumple
+### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo): cumple
 
 Rodrigo Moreno Menéndez (`rodrigo.morenom@alumno.ucjc.edu`).
 `spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/`, tag
 `entrega-02`, Actions en verde. En aula: usad vuestro job *batch* como
 contraste con el query de Structured Streaming de hoy.
 
-### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) — 1 fallo del Hito 1
+### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata): 1 fallo del Hito 1
 
 Nasratullah Jabarkhil. Casi cierra el Hito 1.
 
@@ -229,7 +218,7 @@ Nasratullah Jabarkhil. Casi cierra el Hito 1.
 | Banco Mundial con `country/{iso2}/...` (un GET por país del foco) | URL `country/all/indicator/...`, paginación contra `total`; sin `{iso2}`/`{iso3}` en la plantilla |
 | Sin `spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/`, tag `entrega-02` | Completar el cierre del Hito 2 del enunciado |
 
-### [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) — 3 fallos del Hito 1
+### [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026): 3 fallos del Hito 1
 
 | Problema | Arreglo |
 | --- | --- |
@@ -238,7 +227,7 @@ Nasratullah Jabarkhil. Casi cierra el Hito 1.
 | User-Agent `CAMBIAD_ESTO` | Identificar al equipo de verdad |
 | Sin cierre Hito 2 | `spark/job_01.py` + piezas B/C + tag `entrega-02` |
 
-### [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) — 17 fallos; árbol anidado
+### [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto): 17 fallos; árbol anidado
 
 El ETL vive en `practica_01_BigData_starter/`. Marcos + Alejandro Nieto
 en el historial; sin `CONTRIBUTORS.md` institucional.
@@ -251,7 +240,7 @@ en el historial; sin `CONTRIBUTORS.md` institucional.
 | Ficha sin mediana de región / año | `build_cards` con mediana regional del mismo indicador y año |
 | Sin Hito 2 | Job Spark + documentación + tag |
 
-### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) — sigue cerca del starter
+### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject): sigue cerca del starter
 
 Eddyson Ureña (CONTRIBUTORS ya añadido). Sigue fallando Parquet Hive,
 mediana en fichas y casi todo el Hito 2.
@@ -329,12 +318,15 @@ de más arriba, que actualiza el profesor.
 
 | Ruta | Contenido |
 | --- | --- |
-| `SESION_19.md` | Checklist de aula (18/11 · Structured Streaming) |
-| `ENCARGO_S19.md` | Entrega tras la clase (pytest + acta) |
+| `SESION_19.md` | Checklist de aula (18/11, Structured Streaming) |
+| `ENCARGO_S19.md` | Entrega tras la clase (T1 a T6 + tests/s19 + acta) |
+| `SESION_19_aula.pdf` | Diapositivas de la sesión 19 |
+| `streaming/` | Starter `temp_stream.py` y scripts de publicación (S19) |
+| `tests/s19/` | Comprobación estática del query y del acta (S19) |
 | `Makefile` | `deps`, `test-hito1`/`test-hito2` con `REPO=…`, `kit-hoy` |
 | `src/` | Extract / transform / load / fichas |
 | `sources.yaml` | Fuentes y países foco |
-| `data/` | `raw` → `clean` → `serving` (artefactos locales, no versionados) |
+| `data/` | `raw`, `clean` y `serving` (artefactos locales, no versionados) |
 | `tests/hito1/` | Comprobaciones del Hito 1, más la ejecución del ETL actual |
 | `tests/hito2/` | Comprobaciones del Hito 2 (Spark y cierre) |
 | `tests/conftest.py` | Registra `--repo` / `DSBD_REPO` |
@@ -345,4 +337,4 @@ de más arriba, que actualiza el profesor.
 
 - **Extract** no limpia ni une fuentes.
 - **Transform** no descarga; solo lee `data/raw/`.
-- **Load / fichas** no leen JSON bruto; solo `clean/` → `serving/`.
+- **Load / fichas** no leen JSON bruto; solo de `clean/` a `serving/`.

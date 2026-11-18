@@ -1,10 +1,10 @@
-"""Transform: data/raw/ → data/clean/ (tablas normalizadas).
+"""Transform: de data/raw/ a data/clean/ (tablas normalizadas).
 
 Obligatorio en la Práctica 1 Big Data (ver enunciado):
-  - clave canónica iso3 (+ mapeo iso2↔iso3 vía focus_countries)
-  - perfil aplanado → countries
-  - explosión de idiomas → languages (tabla larga)
-  - indicadores en esquema común → indicators
+  - clave canónica iso3 (+ mapeo iso2/iso3 vía focus_countries)
+  - perfil aplanado en countries
+  - explosión de idiomas en languages (tabla larga)
+  - indicadores en esquema común en indicators
   - tipado / nulos; join por iso3; join_orphans.csv
 
 Para una URL nueva: implementad una función y registradla en TRANSFORMERS
@@ -197,7 +197,7 @@ def run_transform(cfg: Config | None = None) -> dict[str, pd.DataFrame]:
                 f"Transformer '{name}' no registrado. "
                 f"Disponibles: {sorted(TRANSFORMERS)}"
             )
-        print(f"[transform] {source.id} → {name}")
+        print(f"[transform] {source.id} a {name}")
         out = TRANSFORMERS[name](source, cfg)
         for table, df in out.items():
             buckets.setdefault(table, []).append(df)
@@ -207,10 +207,10 @@ def run_transform(cfg: Config | None = None) -> dict[str, pd.DataFrame]:
         df = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
         dest = CLEAN / f"{table}.csv"
         df.to_csv(dest, index=False)
-        print(f"[transform] {table}: {len(df)} filas → {dest}")
+        print(f"[transform] {table}: {len(df)} filas en {dest}")
         merged[table] = df
 
-    # Cobertura del cruce (huérfanos perfil → indicadores)
+    # Cobertura del cruce (huérfanos entre perfil e indicadores)
     if "countries" in merged and "indicators" in merged:
         have = set(merged["indicators"]["iso3"].dropna().unique())
         profile = set(merged["countries"]["iso3"].dropna().unique())
@@ -218,7 +218,7 @@ def run_transform(cfg: Config | None = None) -> dict[str, pd.DataFrame]:
         report = pd.DataFrame({"iso3": orphans, "missing_in": "indicators"})
         report_path = CLEAN / "join_orphans.csv"
         report.to_csv(report_path, index=False)
-        print(f"[transform] huérfanos del join: {len(orphans)} → {report_path}")
+        print(f"[transform] huérfanos del join: {len(orphans)} en {report_path}")
 
     return merged
 

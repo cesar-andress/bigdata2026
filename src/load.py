@@ -1,4 +1,4 @@
-"""Load: data/clean/ → data/serving/observatorio.sqlite (+ opcional Parquet)."""
+"""Load: de data/clean/ a data/serving/observatorio.sqlite (+ opcional Parquet)."""
 
 from __future__ import annotations
 
@@ -27,12 +27,12 @@ def run_load(write_parquet: bool = False) -> Path:
                 continue
             df = pd.read_csv(csv_path)
             df.to_sql(name, conn, index=False, if_exists="replace")
-            print(f"[load] {name}: {len(df)} filas → sqlite")
+            print(f"[load] {name}: {len(df)} filas a sqlite")
             if write_parquet:
                 pq = SERVING / f"{name}.parquet"
                 try:
                     df.to_parquet(pq, index=False)
-                    print(f"[load] {name} → {pq}")
+                    print(f"[load] {name} en {pq}")
                 except ImportError:
                     print(
                         "[load] Parquet omitido: instalad pyarrow "
@@ -42,7 +42,7 @@ def run_load(write_parquet: bool = False) -> Path:
     finally:
         conn.close()
 
-    print(f"[load] base → {DB_PATH}")
+    print(f"[load] base en {DB_PATH}")
     return DB_PATH
 
 

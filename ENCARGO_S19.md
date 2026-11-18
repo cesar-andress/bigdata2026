@@ -1,42 +1,64 @@
-# Encargo · Sesión 19 (Tema VII)
+# Encargo de la sesión 19 (18/11/2026)
 
-Entregar en **vuestro** repositorio de equipo (no en este).
+Diapositivas: [`SESION_19_aula.pdf`](SESION_19_aula.pdf).
+Se entrega en **vuestro** repositorio antes de la clase del **23/11/2026**.
 
-## 1. Kit docente
-
-Dejad constancia del commit de
-[`cesar-andress/bigdata2026`](https://github.com/cesar-andress/bigdata2026)
-que habéis usado (`git pull` / clon).
-
-## 2. Pytest desde el clon docente
+## A. Bajad lo nuevo
 
 ```bash
-pip install -r requirements.txt -r requirements-dev.txt
-pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
-pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
+cd bigdata2026 && git pull --ff-only
+mkdir -p ../vuestro-repo/streaming
+cp streaming/*.py streaming/*.sh ../vuestro-repo/streaming/
 ```
 
-Pegad o enlazad la salida. Un fallo = el hito no está cumplido.
-Prioridad: cerrar Hito 1; después el cierre del Hito 2
-(`spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/`, tag
-`entrega-02`).
+## B. Rellenad `streaming/temp_stream.py` y probadlo en DataLab
 
-## 3. Acta `ACTA_S19.md` (una pantalla)
+El fichero tiene seis huecos marcados `TODO`. Cada uno explica qué poner.
 
-Cuatro bloques, en prosa breve:
+| Hueco | Qué hace |
+| --- | --- |
+| T1 | Leer de Kafka (`127.0.0.1:9092`, topic `sensores.temp`) |
+| T2 | Convertir el mensaje JSON en columnas `sensor`, `valor`, `ts` |
+| T3 | Contar eventos por sensor y por minuto |
+| T4 | Mostrar en consola y guardar el checkpoint en `~/checkpoints/temp-stream` |
+| T5 | Quedarse esperando y parar limpio con Ctrl+C |
+| T6 | Reto: un segundo query, `temp-nulos`, con su propio checkpoint |
 
-1. **Batch.** Qué hace vuestro `spark/job_01.py` y que el proceso termina.
-2. **Streaming.** Qué haría un query `temp-stream` y que permanece hasta
-   `stop`.
-3. **Tres memorias.** Progreso, estado, checkpoint (una línea cada una).
-4. **Ensayo.** Qué demuestra stop/start con la misma
-   `checkpointLocation` (`~/checkpoints/temp-stream`). Qué **no**
-   demuestra ver filas en consola.
+Lanzadlo en DataLab:
 
-Si ensayáis en DataLab (`admin@datalab`, Kafka `127.0.0.1:9092`, topic
-`sensores.temp`), indicad si hubo reanudación. No inventéis cifras ni
-capturas.
+```bash
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.9 \
+  streaming/temp_stream.py
+```
 
-## Criterio de revisión
+Y haced la prueba de parar y arrancar:
 
-No basta la consola. Hace falta pytest + acta de las tres memorias.
+1. Arrancad y mirad la consola.
+2. Ctrl+C.
+3. Con el programa parado: `bash streaming/publicar_control.sh`
+4. Arrancad otra vez con el mismo comando. Si salen los eventos del
+   paso 3 sin repetir todo lo anterior, el checkpoint funciona.
+
+## C. Escribid `ACTA_S19.md` y pasad el test
+
+`ACTA_S19.md`, una pantalla, cinco respuestas cortas:
+
+1. ¿Qué hace vuestro `spark/job_01.py` y por qué termina?
+2. ¿Qué hace `temp-stream` y por qué no termina?
+3. ¿Qué guarda el checkpoint? (progreso y estado)
+4. ¿Qué pasó en la prueba de parar y arrancar?
+5. Reto: ¿qué pasó con los dos eventos trampa? ¿Por qué `temp-nulos`
+   necesita su propio checkpoint?
+
+Test, desde el clon de este repo:
+
+```bash
+pytest -q tests/s19 --repo=../vuestro-repo
+```
+
+Pegad la salida al final del acta. Si no pudisteis usar DataLab, decidlo
+en el acta; no inventéis resultados.
+
+Quien no tenga aún el Hito 1 o el Hito 2: siguen pendientes
+(`pytest -q tests/hito1 --repo=...` y `tests/hito2`). Vuestro arreglo
+está en el `README.md`, sección «Problemas y arreglos».

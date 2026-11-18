@@ -61,7 +61,7 @@ def _card_markdown(iso3: str, countries: pd.DataFrame, languages: pd.DataFrame,
                 f"({'por encima' if own > mean_v else 'por debajo o igual'})."
             )
 
-    return f"""# Ficha país — {c['name_common']} ({iso3})
+    return f"""# Ficha país: {c['name_common']} ({iso3})
 
 - **Nombre oficial:** {c.get('name_official')}
 - **ISO2 / ISO3:** {c.get('iso2')} / {iso3}
@@ -88,7 +88,7 @@ def run_build_cards() -> list[Path]:
     ensure_dirs()
     if not DB_PATH.exists():
         raise FileNotFoundError(
-            f"No existe {DB_PATH}. Ejecutad antes extract → transform → load."
+            f"No existe {DB_PATH}. Ejecutad antes extract, transform y load."
         )
 
     conn = sqlite3.connect(DB_PATH)
