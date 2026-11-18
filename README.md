@@ -124,75 +124,142 @@ Sobre el starter original **los tests de contrato fallan a propósito**.
 El detalle de qué mira cada hito, y cómo lanzar la batería contra
 vuestro clon, está en «Qué tenéis que hacer».
 
-## Estado de los equipos (4 de noviembre de 2026)
+## Sesión de hoy · 18 de noviembre de 2026 (sesión 19)
 
-Comprobado ese día contra la rama por defecto de cada GitHub, con
-`pytest tests/hito1` y `pytest tests/hito2` de este repositorio.
-**Pasar** significa cero fallos. Con un fallo, el hito no está cumplido.
+Hoy en aula es el **Tema VII**: arquitectura del cómputo continuo en
+**Spark Structured Streaming** (estado, checkpointing y recuperación),
+sobre DataLab (`admin@datalab`), Kafka en `127.0.0.1:9092` y el topic
+`sensores.temp`.
 
-El límite del Hito 1 es el **4 de noviembre de 2026**. El del Hito 2 es
-el **11 de noviembre de 2026, a las 23:59**. A fecha de esta tabla,
-**ningún equipo pasaría ninguno de los dos hitos.**
+### Qué se os va a pedir en la sesión
 
-| Repositorio | Commit comprobado | Hito 1 | ¿Pasa el Hito 1? | Hito 2 | ¿Pasa el Hito 2? |
-| --- | --- | --- | --- | --- | --- |
-| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `290ab68` · 04/11/2026 19:13 | 64 passed, 1 failed | No | 2 passed, 18 failed | No |
-| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `dd59cee` · 28/10/2026 | 34 passed, 30 failed, 1 skipped | No | 0 passed, 20 failed | No |
-| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `a6f6510` · 04/11/2026 19:58 | 34 passed, 30 failed, 1 skipped | No | 0 passed, 20 failed | No |
-| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `694c4ff` · 04/11/2026 19:04, repo regenerado | 35 passed, 29 failed, 1 skipped | No | 0 passed, 20 failed | No |
-| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd` · 04/11/2026 12:53 | 47 passed, 17 failed, 1 skipped | No | 0 passed, 20 failed | No |
-| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | sin commits en `origin` | no se puede ejecutar | No | no se puede ejecutar | No |
-| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `9bcf8c2` · 04/11/2026 18:36 | 53 passed, 3 failed, 9 skipped | No | 1 passed, 19 failed | No |
+1. **Contraste batch ↔ streaming.** El `spark/job_01.py` de la Entrega 2
+   es un job *batch*: lee Parquet, calcula, escribe y termina. El query
+   de hoy permanece activo: micro-lotes, progreso y, si hay agregación
+   por ventana, estado. Misma familia Spark; ciclo de vida distinto.
+2. **Demostrar continuidad, no solo filas.** Tras un `stop` y un nuevo
+   arranque con la **misma** `checkpointLocation`
+   (`~/checkpoints/temp-stream`), el query debe reanudar progreso (y
+   estado de ventanas si aplica). Ver filas en consola **no** basta.
+3. **Nombrar las tres memorias:** progreso (hasta dónde se leyó),
+   estado (agregados abiertos) y checkpoint (dónde sobreviven).
+4. **No confundir** `startingOffsets=earliest` / `latest` sin checkpoint
+   con «recuperación». Sin checkpoint estable, cada arranque es un
+   primer día.
 
-Medido de nuevo el 4 de noviembre por la noche, tras `git pull` de cada
-`origin`. El que sigue en el starter
-([edurlix/BigDataProject](https://github.com/edurlix/BigDataProject))
-aguanta la Práctica 1 (`pytest -m runtime`: 26 passed). Eso no cuenta
-como Hito 1. Nadie tiene `spark/job_01.py` ni la etiqueta `entrega-02`.
+Quien aún no cierra la Entrega 2: el puente de aula es ese contraste.
+El checklist de más abajo indica el arreglo mínimo para que
+`pytest tests/hito1` y `tests/hito2` pasen a cero fallos en vuestro clon.
 
-[hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) se borró y se
-volvió a crear. El `main` nuevo es `694c4ff` (4 de noviembre de 2026,
-19:04). Tiene las etiquetas `1.0.0` y `1.0.1`, no `entrega-02`. Copió
-los dos workflows y `tests/`, pero el `tests/conftest.py` de esa copia
-llama a `--repo` sin registrarla (el alta estaba entonces en el
-`conftest.py` de la raíz, que no copió). Sus Actions no llegan a
-evaluar el código: los 65 tests del Hito 1 y los 20 del Hito 2
-terminan en error (`no option named '--repo'`). Hace falta volver a
-copiar `tests/conftest.py`. Medidos desde este repositorio, tampoco
-pasan. Además,
-`load_config` abre `country_list.csv` con una ruta relativa al
-directorio de trabajo: el test de `runtime` que carga el YAML falla
-por eso. El resto del `runtime` pasa.
+### Cómo comprobarlo antes de pedir revisión
 
-[nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata)
-es el que más se acerca en el Hito 1: 64 passed y un solo fallo. El
-Banco Mundial sigue pidiendo por país
-(`country/{iso2}/...&page=1`), no `country/all`. Tiene
-`CONTRIBUTORS.md` con el correo institucional y el `.gitignore` deja
-fuera `data/`, `logs/` y `.venv/`. No hay job de Spark ni etiqueta
-`entrega-02` (sí `v1.0.0`). Copió tests y el workflow del Hito 1.
+```bash
+# desde un clon de este repo docente
+pip install -r requirements.txt -r requirements-dev.txt
+pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
+pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
+```
 
-[rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo)
-movió `config` y `paths` a `src/core/`. El contrato sigue siendo el del
-starter. El fichero `.github/workflows/hito1-tests.yaml` es un comentario,
-no un workflow.
+Hace falta `pyarrow` (ya va en `requirements.txt` de este repo). Un solo
+fallo = el hito no está cumplido.
 
-[marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto)
-sigue en `f18abfd`, con el ETL dentro de
-`practica_01_BigData_starter/`. Quedan 17 fallos: no hay
-`CONTRIBUTORS.md` ni `--force`, una respuesta que no sea 200 se guarda
-en raw, no aparece el caso 404, faltan columnas de `excluded_entities`
-y la ficha no usa la mediana.
+## Estado de los equipos (18 de noviembre de 2026)
 
-[uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026)
-está más avanzado que el starter (paginación del Banco Mundial, seis
-indicadores, Parquet Hive, criterio de país). Aun así no pasa. En el
-Hito 1 faltan `CONTRIBUTORS.md`, la columna `source_code` en
-`excluded_entities.csv` (ahora se llama `code`) y un User-Agent de
-equipo: el que hay dice `CAMBIAD_ESTO`. En el Hito 2 falta casi todo
-el cierre: no hay `spark/job_01.py`, ni `ENTREGA_02.md`, ni `BUGS.md`,
-ni `evidencias/`, ni la etiqueta `entrega-02`. El `.gitignore` sí deja
-fuera `logs/`.
+Comprobado hoy contra la rama por defecto de cada GitHub, con
+`pytest tests/hito1` y `pytest tests/hito2` de este repositorio
+(`pyarrow` instalado). **Pasar** = cero fallos.
+
+Límites oficiales: Hito 1 · **4/11/2026**; Hito 2 · **11/11/2026 23:59**
+(marca = fecha de la etiqueta anotada `entrega-02` en GitHub).
+
+| Repositorio | Commit / situación | Hito 1 | ¿Pasa? | Hito 2 | ¿Pasa? | `entrega-02` |
+| --- | --- | --- | --- | --- | --- | --- |
+| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ca0cafd` · 11/11/2026 | 65 passed | **Sí** | 20 passed | **Sí** | sí (11/11 10:16) |
+| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `3b9282f` · 17/11/2026 | 64 passed, 1 failed | No | 2 passed, 18 failed | No | no |
+| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `9bcf8c2` · 04/11/2026 | 53 passed, 3 failed, 9 skipped | No | 1 passed, 19 failed | No | no |
+| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd` · 04/11/2026 (código bajo `practica_01_BigData_starter/`) | 47 passed, 17 failed, 1 skipped | No | 0 passed, 20 failed | No | no |
+| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `3b2cc43` · 04/11/2026 | 36 passed, 29 failed | No | 1 passed, 19 failed | No | no |
+| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | — |
+| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | — |
+
+Solo un equipo cumple hoy ambos hitos con etiqueta de entrega.
+El resto: o bien queda un fallo de contrato, o el cierre del Hito 2
+no está, o el repositorio ya no es público / no existe.
+
+## Problemas y arreglos (para pasar los tests)
+
+### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) — cumple
+
+Rodrigo Moreno Menéndez (`rodrigo.morenom@alumno.ucjc.edu`).
+`spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/`, tag
+`entrega-02`, Actions en verde. En aula: usad vuestro job *batch* como
+contraste con el query de Structured Streaming de hoy.
+
+### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) — 1 fallo del Hito 1
+
+Nasratullah Jabarkhil. Casi cierra el Hito 1.
+
+| Problema | Arreglo |
+| --- | --- |
+| Banco Mundial con `country/{iso2}/...` (un GET por país del foco) | URL `country/all/indicator/...`, paginación contra `total`; sin `{iso2}`/`{iso3}` en la plantilla |
+| Sin `spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/`, tag `entrega-02` | Completar el cierre del Hito 2 del enunciado |
+
+### [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) — 3 fallos del Hito 1
+
+| Problema | Arreglo |
+| --- | --- |
+| No hay `CONTRIBUTORS.md` | Nombre, apellidos y correo `@…ucjc.edu` en la raíz |
+| `excluded_entities.csv` usa `code` | Columna `source_code` (contrato del enunciado) |
+| User-Agent `CAMBIAD_ESTO` | Identificar al equipo de verdad |
+| Sin cierre Hito 2 | `spark/job_01.py` + piezas B/C + tag `entrega-02` |
+
+### [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) — 17 fallos; árbol anidado
+
+El ETL vive en `practica_01_BigData_starter/`. Marcos + Alejandro Nieto
+en el historial; sin `CONTRIBUTORS.md` institucional.
+
+| Problema | Arreglo |
+| --- | --- |
+| Código no está en la raíz del repo | Subir `src/`, `sources.yaml`, etc. a la raíz (o que `--repo` apunte al subdirectorio y documentarlo; la etiqueta y el clon limpio del enunciado esperan la raíz) |
+| Sin `CONTRIBUTORS.md` | Correos `@…ucjc.edu` |
+| Sin `--force` / se guardan no-200 en raw / 404 no explícito | Extract: no escribir raw si status ≠ 200; no reintentar 404; `--force` regenera |
+| Ficha sin mediana de región / año | `build_cards` con mediana regional del mismo indicador y año |
+| Sin Hito 2 | Job Spark + documentación + tag |
+
+### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) — sigue cerca del starter
+
+Eddyson Ureña (CONTRIBUTORS ya añadido). Sigue fallando Parquet Hive,
+mediana en fichas y casi todo el Hito 2.
+
+| Problema | Arreglo |
+| --- | --- |
+| Indicators/languages no en Parquet Hive | `data/clean/indicators/indicator_id=<id>/` + `pyarrow` en `requirements.txt` |
+| Comparación de ficha no es mediana regional | Misma regla que el enunciado del Hito 1 |
+| Sin Spark ni cierre | Como el checklist del Hito 2 más arriba |
+
+### Repos ausentes (404)
+
+[hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) y
+[Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData)
+ya no resolvían en GitHub el 18/11. Sin URL pública no hay medición ni
+etiqueta. Hay que **restaurar el repo** (o publicar uno nuevo y avisar
+al profesor) antes de cualquier revisión.
+
+### Checklist mínimo del Hito 2 (quien aún no lo tenga)
+
+1. `spark/job_01.py` ejecutable: tres vías (RDD / DataFrame / Spark SQL)
+   alineadas con SQLite; Parquet en `data/serving/spark/cobertura_decada/`;
+   event log en `logs/spark-events/`.
+2. `ENTREGA_02.md` + `BUGS.md` (≥ 3 defectos).
+3. Copiar el event log a `evidencias/`.
+4. `.gitignore` con `data/`, `logs/`, `.venv/`.
+5. `git tag -a entrega-02` y `git push origin entrega-02`.
+
+## Nota histórica (4 de noviembre de 2026)
+
+Ese día **ningún** equipo pasaba ningún hito. El detalle de aquella
+pasada quedó en el historial Git de este README (`7c88b52` /
+`0aa4166`). La tabla canónica es la del **18 de noviembre** de arriba.
 
 ## Cómo funcionan las tareas automatizadas
 
@@ -215,7 +282,7 @@ falla, el Hito 2 se ejecuta igual. En cada máquina los pasos son:
 2. **Python 3.12.** Instala ese intérprete y guarda la caché de pip
    para no reinstalar desde cero en cada ejecución.
 3. **Dependencias.** `pip install -r requirements.txt -r requirements-dev.txt`
-   (`requests`, `pandas`, `PyYAML` y `pytest`).
+   (`requests`, `pandas`, `PyYAML`, `pyarrow` y `pytest`).
 4. **El pytest de ese hito.** El del Hito 1 no lanza el del Hito 2, ni al revés.
 
 El resultado queda en la pestaña **Actions** de este repositorio:
