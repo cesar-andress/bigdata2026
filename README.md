@@ -29,7 +29,8 @@ cd bigdata2026 && git pull --ff-only
 ```
 
 También podéis pedir al profesor el `kit_sesion_19.zip` (`make kit-hoy`
-en este clon): tests, workflows, `SESION_19.md` y dependencias.
+en este clon): tests, workflows, `SESION_19.md`, `ENCARGO_S19.md` y
+dependencias.
 
 Leed primero **[`SESION_19.md`](SESION_19.md)** (checklist de aula:
 batch ↔ streaming, tres memorias, checkpoint
@@ -329,6 +330,7 @@ de más arriba, que actualiza el profesor.
 | Ruta | Contenido |
 | --- | --- |
 | `SESION_19.md` | Checklist de aula (18/11 · Structured Streaming) |
+| `ENCARGO_S19.md` | Entrega tras la clase (pytest + acta) |
 | `Makefile` | `deps`, `test-hito1`/`test-hito2` con `REPO=…`, `kit-hoy` |
 | `src/` | Extract / transform / load / fichas |
 | `sources.yaml` | Fuentes y países foco |

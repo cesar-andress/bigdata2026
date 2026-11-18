@@ -23,7 +23,7 @@ test-hito2:
 kit-hoy:
 	@rm -f kit_sesion_19.zip
 	zip -r kit_sesion_19.zip \
-		SESION_19.md README.md Makefile \
+		SESION_19.md ENCARGO_S19.md README.md Makefile \
 		requirements.txt requirements-dev.txt pytest.ini conftest.py \
 		tests \
 		.github/workflows/hito1-tests.yml \
