@@ -30,10 +30,9 @@ cd bigdata2026 && git pull --ff-only
 
 También podéis pedir al profesor el `kit_sesion_19.zip` (`make kit-hoy`
 en este clon): tests, workflows, `streaming/`, `SESION_19.md`,
-`ENCARGO_S19.md`, el PDF de aula y dependencias.
+`ENCARGO_S19.md` y dependencias.
 
-**Nuevo hoy:** [`SESION_19_aula.pdf`](SESION_19_aula.pdf) (las
-diapositivas), `streaming/temp_stream.py` (starter T1 a T6 que
+**Nuevo hoy:** `streaming/temp_stream.py` (starter T1 a T6 que
 implementáis en vuestro repo), `streaming/publicar_control.sh`,
 `streaming/publicar_trampas.sh` (reto sorpresa) y `tests/s19/`.
 Lo que hay que entregar: [`ENCARGO_S19.md`](ENCARGO_S19.md).
@@ -173,7 +172,6 @@ termómetros desde Kafka y cuenta cuántos manda cada uno por minuto. Si lo
 paráis y lo arrancáis, tiene que saber por dónde iba gracias a su
 checkpoint, la carpeta `~/checkpoints/temp-stream`.
 
-La historia completa está en [`SESION_19_aula.pdf`](SESION_19_aula.pdf).
 Los tres pasos (A, B y C) están en [`ENCARGO_S19.md`](ENCARGO_S19.md), y
 los datos de DataLab, en [`SESION_19.md`](SESION_19.md).
 
@@ -320,7 +318,6 @@ de más arriba, que actualiza el profesor.
 | --- | --- |
 | `SESION_19.md` | Checklist de aula (18/11, Structured Streaming) |
 | `ENCARGO_S19.md` | Entrega tras la clase (T1 a T6 + tests/s19 + acta) |
-| `SESION_19_aula.pdf` | Diapositivas de la sesión 19 |
 | `streaming/` | Starter `temp_stream.py` y scripts de publicación (S19) |
 | `tests/s19/` | Comprobación estática del query y del acta (S19) |
 | `Makefile` | `deps`, `test-hito1`/`test-hito2` con `REPO=…`, `kit-hoy` |

@@ -28,7 +28,7 @@ test-s19:
 kit-hoy:
 	@rm -f kit_sesion_19.zip
 	zip -r kit_sesion_19.zip \
-		SESION_19.md ENCARGO_S19.md SESION_19_aula.pdf README.md Makefile \
+		SESION_19.md ENCARGO_S19.md README.md Makefile \
 		streaming \
 		requirements.txt requirements-dev.txt pytest.ini conftest.py \
 		tests \

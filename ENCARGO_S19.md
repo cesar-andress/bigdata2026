@@ -1,6 +1,5 @@
 # Encargo de la sesión 19 (18/11/2026)
 
-Diapositivas: [`SESION_19_aula.pdf`](SESION_19_aula.pdf).
 Se entrega en **vuestro** repositorio antes de la clase del **23/11/2026**.
 
 ## A. Bajad lo nuevo

@@ -17,5 +17,5 @@ informe/*
 __pycache__/
 *.pyc
 
-# Fuente LaTeX de las diapositivas (solo local)
+# Solo local
 presentacion/

@@ -1,6 +1,5 @@
 # Sesión 19: 18 de noviembre de 2026
 
-Diapositivas: [`SESION_19_aula.pdf`](SESION_19_aula.pdf).
 Lo que hay que entregar: [`ENCARGO_S19.md`](ENCARGO_S19.md).
 
 ## La idea de hoy
