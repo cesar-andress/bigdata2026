@@ -143,7 +143,7 @@ pip install -r requirements.txt
 python -m src.pipeline
 ```
 
-Pasos sueltos: `python -m src.extract`, `python -m src.transform` ·
+Pasos sueltos: `python -m src.extract`, `python -m src.transform`,
 `python -m src.load`, `python -m src.build_cards`.
 
 Reutilizar descargas ya hechas:
@@ -175,87 +175,94 @@ checkpoint, la carpeta `~/checkpoints/temp-stream`.
 Los tres pasos (A, B y C) están en [`ENCARGO_S19.md`](ENCARGO_S19.md), y
 los datos de DataLab, en [`SESION_19.md`](SESION_19.md).
 
-## Estado de los equipos (18 de noviembre de 2026)
+## Estado de los equipos (18 de noviembre de 2026, 19:00)
 
-Comprobado hoy contra la rama por defecto de cada GitHub, con
-`pytest tests/hito1` y `pytest tests/hito2` de este repositorio
-(`pyarrow` instalado). **Pasar** = cero fallos.
+Medido hoy a las 19:00 sobre un clon recién bajado de la rama por defecto
+de cada GitHub, con `pytest tests/hito1`, `pytest tests/hito2` y
+`pytest tests/s19` de este repositorio. **Pasa** = cero fallos.
 
-Límites oficiales: Hito 1, **4/11/2026**; Hito 2, **11/11/2026 23:59**
-(marca = fecha de la etiqueta anotada `entrega-02` en GitHub).
+Límites: Hito 1, **4/11/2026**; Hito 2, **11/11/2026 23:59** (cuenta la
+fecha de la etiqueta `entrega-02` en GitHub). Lo de la sesión 19 se
+entrega antes del **23/11/2026**.
 
-| Repositorio | Commit / situación | Hito 1 | ¿Pasa? | Hito 2 | ¿Pasa? | `entrega-02` |
-| --- | --- | --- | --- | --- | --- | --- |
-| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ca0cafd`, 11/11/2026 | 65 passed | **Sí** | 20 passed | **Sí** | sí (11/11 10:16) |
-| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `3b9282f`, 17/11/2026 | 64 passed, 1 failed | No | 2 passed, 18 failed | No | no |
-| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `9bcf8c2`, 04/11/2026 | 53 passed, 3 failed, 9 skipped | No | 1 passed, 19 failed | No | no |
-| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd`, 04/11/2026 (código bajo `practica_01_BigData_starter/`) | 47 passed, 17 failed, 1 skipped | No | 0 passed, 20 failed | No | no |
-| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `3b2cc43`, 04/11/2026 | 36 passed, 29 failed | No | 1 passed, 19 failed | No | no |
-| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | no |
-| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | **404** en GitHub (repo ausente) | no medible | No | no medible | No | no |
+| Repositorio | Último commit | Hito 1 | Hito 2 | `entrega-02` | S19 |
+| --- | --- | --- | --- | --- | --- |
+| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ca0cafd`, 11/11 | **Pasa** (65) | **Pasa** (20) | 11/11 10:16 | pendiente |
+| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `0200627`, 18/11 | **Pasa** (64, 1 omitido) | **Pasa** (20) | 18/11 18:41 (fuera de plazo) | pendiente |
+| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `7e56274`, 18/11 | **Pasa** (65) | 1 fallo | 18/11 15:15 (fuera de plazo) | pendiente |
+| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `3b9282f`, 17/11 | 1 fallo | 18 fallos | no | pendiente |
+| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `289bad2`, 04/11 | 23 fallos | 19 fallos | no | pendiente |
+| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd`, 04/11 | 17 fallos | 20 fallos | no | pendiente |
+| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | no existe en GitHub | no medible | no medible | no | no medible |
 
-Solo un equipo cumple hoy ambos hitos con etiqueta de entrega.
-El resto: o bien queda un fallo de contrato, o el cierre del Hito 2
-no está, o el repositorio ya no es público / no existe.
+Desde la medición anterior: uag8076-web cierra los dos hitos, edurlix
+cierra el Hito 1 y se queda a un fallo del Hito 2, y hracjc vuelve a
+estar público. Nadie ha subido aún lo de la sesión 19 (es normal: se
+pidió hoy).
 
 ## Problemas y arreglos (para pasar los tests)
 
 ### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo): cumple
 
-Rodrigo Moreno Menéndez (`rodrigo.morenom@alumno.ucjc.edu`).
-`spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/`, tag
-`entrega-02`, Actions en verde. En aula: usad vuestro job *batch* como
-contraste con el query de Structured Streaming de hoy.
+Rodrigo Moreno Menéndez. Hito 1 y Hito 2 completos, etiqueta en plazo.
+Le queda lo de la sesión 19.
+
+### [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026): cumple, fuera de plazo
+
+Ha arreglado hoy los tres fallos del Hito 1 y ha cerrado el Hito 2
+(`spark/job_01.py`, piezas B y C). La etiqueta `entrega-02` es del 18/11,
+después del límite. El test omitido es el de OWID, que este repo no usa.
+Le queda lo de la sesión 19.
+
+### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject): a un fallo del Hito 2
+
+Eddyson Ureña. Hito 1 completo desde hoy.
+
+| Problema | Arreglo |
+| --- | --- |
+| No hay `.gitignore` | Crear `.gitignore` con `data/`, `logs/` y `.venv/` y volver a etiquetar |
+
+La etiqueta `entrega-02` es del 18/11, después del límite.
 
 ### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata): 1 fallo del Hito 1
 
-Nasratullah Jabarkhil. Casi cierra el Hito 1.
+Nasratullah Jabarkhil. Sin cambios desde el 17/11.
 
 | Problema | Arreglo |
 | --- | --- |
-| Banco Mundial con `country/{iso2}/...` (un GET por país del foco) | URL `country/all/indicator/...`, paginación contra `total`; sin `{iso2}`/`{iso3}` en la plantilla |
-| Sin `spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/`, tag `entrega-02` | Completar el cierre del Hito 2 del enunciado |
+| El Banco Mundial se pide país a país (`country/{iso2}/...`) | URL `country/all/indicator/...` y paginación contra `total`, sin `{iso2}` ni `{iso3}` en la plantilla |
+| Sin `spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/` ni etiqueta | Cerrar el Hito 2 (checklist de abajo) |
 
-### [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026): 3 fallos del Hito 1
+### [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1): de nuevo público, lejos del Hito 1
 
-| Problema | Arreglo |
-| --- | --- |
-| No hay `CONTRIBUTORS.md` | Nombre, apellidos y correo `@…ucjc.edu` en la raíz |
-| `excluded_entities.csv` usa `code` | Columna `source_code` (contrato del enunciado) |
-| User-Agent `CAMBIAD_ESTO` | Identificar al equipo de verdad |
-| Sin cierre Hito 2 | `spark/job_01.py` + piezas B/C + tag `entrega-02` |
-
-### [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto): 17 fallos; árbol anidado
-
-El ETL vive en `practica_01_BigData_starter/`. Marcos + Alejandro Nieto
-en el historial; sin `CONTRIBUTORS.md` institucional.
+Hernán Renero Villa. Último commit del 4/11: el repo está casi como el
+starter.
 
 | Problema | Arreglo |
 | --- | --- |
-| Código no está en la raíz del repo | Subir `src/`, `sources.yaml`, etc. a la raíz (o que `--repo` apunte al subdirectorio y documentarlo; la etiqueta y el clon limpio del enunciado esperan la raíz) |
-| Sin `CONTRIBUTORS.md` | Correos `@…ucjc.edu` |
-| Sin `--force` / se guardan no-200 en raw / 404 no explícito | Extract: no escribir raw si status ≠ 200; no reintentar 404; `--force` regenera |
-| Ficha sin mediana de región / año | `build_cards` con mediana regional del mismo indicador y año |
-| Sin Hito 2 | Job Spark + documentación + tag |
+| Menos de seis indicadores del Banco Mundial, sin serie completa ni paginación | Extract del Hito 1 completo |
+| Sin ritmo de cortesía, sin `run_id` en el manifiesto, guarda respuestas no 200, reintenta los 404 | Extract del Hito 1 completo |
+| Sin `countries.parquet`, `excluded_entities.csv`, Parquet Hive ni año entero | Universo y transform del Hito 1 |
+| Fichas sin mediana regional del mismo año | `build_cards` del Hito 1 |
+| Sin Hito 2 | Checklist de abajo |
 
-### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject): sigue cerca del starter
+### [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto): 17 fallos, código en una subcarpeta
 
-Eddyson Ureña (CONTRIBUTORS ya añadido). Sigue fallando Parquet Hive,
-mediana en fichas y casi todo el Hito 2.
+Sin cambios desde el 4/11. El ETL vive en `practica_01_BigData_starter/`.
 
 | Problema | Arreglo |
 | --- | --- |
-| Indicators/languages no en Parquet Hive | `data/clean/indicators/indicator_id=<id>/` + `pyarrow` en `requirements.txt` |
-| Comparación de ficha no es mediana regional | Misma regla que el enunciado del Hito 1 |
-| Sin Spark ni cierre | Como el checklist del Hito 2 más arriba |
+| El código no está en la raíz del repo | Subir `src/`, `sources.yaml`, etc. a la raíz |
+| Sin `CONTRIBUTORS.md` | Nombres y correos `@...ucjc.edu` |
+| Sin `--force`, guarda respuestas no 200, no trata el 404 | Extract del Hito 1 |
+| Fichas sin mediana regional del mismo año | `build_cards` del Hito 1 |
+| Sin Hito 2 | Checklist de abajo |
 
-### Repos ausentes (404)
+### [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData): no existe
 
-[hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) y
-[Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData)
-ya no resolvían en GitHub el 18/11. Sin URL pública no hay medición ni
-etiqueta. Hay que **restaurar el repo** (o publicar uno nuevo y avisar
-al profesor) antes de cualquier revisión.
+Sigue sin resolver en GitHub el 18/11. Sin URL pública no hay medición
+ni etiqueta: hay que restaurar el repo o publicar uno nuevo y avisar al
+profesor.
 
 ### Checklist mínimo del Hito 2 (quien aún no lo tenga)
 
