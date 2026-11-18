@@ -30,12 +30,13 @@ cd bigdata2026 && git pull --ff-only
 Hoy lo útil es, sobre todo:
 
 1. `SESION_19.md` (este checklist).
-2. `tests/hito1/`, `tests/hito2/`, `tests/conftest.py` (opción `--repo`).
-3. `requirements.txt` (incluye `pyarrow`) y `requirements-dev.txt`.
-4. `.github/workflows/hito1-tests.yml` y `hito2-tests.yml` (si queréis
+2. `ENCARGO_S19.md` (lo que hay que entregar tras la clase).
+3. `tests/hito1/`, `tests/hito2/`, `tests/conftest.py` (opción `--repo`).
+4. `requirements.txt` (incluye `pyarrow`) y `requirements-dev.txt`.
+5. `.github/workflows/hito1-tests.yml` y `hito2-tests.yml` (si queréis
    CI en vuestro repo: copiad esos YAML + `tests/` + `pytest.ini` +
    `requirements-dev.txt`).
-5. La sección «Estado de los equipos» del `README.md` (quién pasa y
+6. La sección «Estado de los equipos» del `README.md` (quién pasa y
    qué arreglar).
 
 No trabajéis encima de este clon: el código de entrega sigue en
@@ -80,3 +81,9 @@ Quien aún no cierra Hito 1 / Hito 2: el puente de aula es el contraste
 batch ↔ streaming con vuestro (o el del starter) `spark/job_01.py`.
 El checklist mínimo de cierre y el estado por equipo están en el
 `README.md` de este repositorio.
+
+## Encargo tras la clase
+
+Lo pedimos al final de la sesión: ver [`ENCARGO_S19.md`](ENCARGO_S19.md)
+(pytest contra vuestro clon + `ACTA_S19.md` con batch, streaming, tres
+memorias y stop/start).
