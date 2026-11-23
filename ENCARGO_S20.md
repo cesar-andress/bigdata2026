@@ -35,6 +35,10 @@ tarde; qué haríais si llega antes (o «ninguna»).
 
 No vale argumentar solo con «moderno», «tiempo real» o «ya hay Kafka».
 
+Cada campo tiene que tener valor en los dos casos. Vale `campo: valor` o
+`- **campo**: valor`. Las tres frases, con vuestras palabras: copiar los
+títulos de la plantilla no cuenta.
+
 ## C. Pasad el test
 
 Desde el clon de este repo:
