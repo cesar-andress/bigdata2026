@@ -1,6 +1,7 @@
 # Encargo de la sesión 19 (18/11/2026)
 
-Se entrega en **vuestro** repositorio antes de la clase del **23/11/2026**.
+Se entrega en **vuestro** repositorio **antes** de la clase del
+**23/11/2026**. El 23/11 se revisa en aula (`pytest tests/s19`).
 
 ## A. Bajad lo nuevo
 

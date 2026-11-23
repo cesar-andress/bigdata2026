@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Rechaza push si el rango a enviar tiene Co-authored-by o autor distinto.
+set -euo pipefail
+REQUIRED_EMAIL='cesar.andress@ucjc.edu'
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [[ "$local_sha" =~ ^0+$ ]] && continue
+  if [[ "$remote_sha" =~ ^0+$ ]]; then
+    range="$local_sha"
+  else
+    range="${remote_sha}..${local_sha}"
+  fi
+  while IFS= read -r commit; do
+    [[ -z "$commit" ]] && continue
+    ae=$(git log -1 --format='%ae' "$commit")
+    ce=$(git log -1 --format='%ce' "$commit")
+    if [[ "$ae" != "$REQUIRED_EMAIL" || "$ce" != "$REQUIRED_EMAIL" ]]; then
+      echo "pre-push: commit $commit tiene email distinto de ${REQUIRED_EMAIL} (ae=$ae ce=$ce)" >&2
+      exit 1
+    fi
+    if git log -1 --format='%B' "$commit" | grep -qiE 'Co-authored-by:'; then
+      echo "pre-push: commit $commit contiene Co-authored-by (prohibido)" >&2
+      exit 1
+    fi
+    if git log -1 --format='%an %cn %ae %ce %B' "$commit" | grep -qiE 'cursoragent|@cursor\.|aiserv'; then
+      echo "pre-push: commit $commit menciona Cursor/aiserv (prohibido)" >&2
+      exit 1
+    fi
+  done < <(git rev-list "$range")
+done

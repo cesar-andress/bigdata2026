@@ -14,11 +14,17 @@ No es la solución de la práctica: es el punto de partida que ya conocéis,
 más la maquinaria de comprobación y CI para que veáis cómo se monta.
 El trabajo se hace en **vuestro** repositorio de equipo, no en este.
 
-## Lo nuevo: 18 de noviembre de 2026 (sesión 19)
+## Hoy: 23 de noviembre de 2026 (sesión 20)
 
-Hoy en aula es el **Tema VII**: Spark Structured Streaming (estado,
-checkpointing y recuperación) en DataLab. Este repo es la fuente de
-«lo nuevo» para comprobar entregas y orientar la sesión.
+Seguimos en el **Tema VII**. Hoy se **revisa** el encargo de la sesión 19
+([`ENCARGO_S19.md`](ENCARGO_S19.md): plazo antes de esta clase) y se
+trabaja el contraste batch frente a streaming. Este repo sigue siendo
+la fuente de «lo nuevo» (tests, `streaming/`, checklist).
+
+## Lo de la sesión 19 (18/11/2026)
+
+El 18/11 en aula fue Structured Streaming (estado, checkpointing y
+recuperación) en DataLab.
 
 ### Qué descargar / actualizar
 
@@ -32,10 +38,9 @@ También podéis pedir al profesor el `kit_sesion_19.zip` (`make kit-hoy`
 en este clon): tests, workflows, `streaming/`, `SESION_19.md`,
 `ENCARGO_S19.md` y dependencias.
 
-**Nuevo hoy:** `streaming/temp_stream.py` (starter T1 a T6 que
-implementáis en vuestro repo), `streaming/publicar_control.sh`,
-`streaming/publicar_trampas.sh` (reto sorpresa) y `tests/s19/`.
-Lo que hay que entregar: [`ENCARGO_S19.md`](ENCARGO_S19.md).
+**Del 18/11 (sigue vigente):** `streaming/temp_stream.py` (T1 a T6),
+`streaming/publicar_control.sh`, `streaming/publicar_trampas.sh` y
+`tests/s19/`. Si aún no lo entregasteis: [`ENCARGO_S19.md`](ENCARGO_S19.md).
 
 Leed primero **[`SESION_19.md`](SESION_19.md)** (checklist de aula:
 batch frente a streaming, tres memorias, checkpoint
@@ -165,104 +170,59 @@ Sobre el starter original **los tests de contrato fallan a propósito**.
 El detalle de qué mira cada hito, y cómo lanzar la batería contra
 vuestro clon, está en «Qué tenéis que hacer».
 
-## Sesión de hoy: 18 de noviembre de 2026 (sesión 19)
+## Encargo S19 (plazo: antes del 23/11/2026)
 
-Hoy escribís un programa Spark que no termina: lee los mensajes de tres
-termómetros desde Kafka y cuenta cuántos manda cada uno por minuto. Si lo
-paráis y lo arrancáis, tiene que saber por dónde iba gracias a su
-checkpoint, la carpeta `~/checkpoints/temp-stream`.
+Los pasos A, B y C están en [`ENCARGO_S19.md`](ENCARGO_S19.md). Datos de
+DataLab: [`SESION_19.md`](SESION_19.md). Hoy (23/11) se revisa en aula.
 
-Los tres pasos (A, B y C) están en [`ENCARGO_S19.md`](ENCARGO_S19.md), y
-los datos de DataLab, en [`SESION_19.md`](SESION_19.md).
+```bash
+pytest -q tests/s19 --repo=/ruta/a/vuestro/clon
+```
 
-## Estado de los equipos (18 de noviembre de 2026, 19:00)
+## Estado de los equipos (23 de noviembre de 2026)
 
-Medido hoy a las 19:00 sobre un clon recién bajado de la rama por defecto
-de cada GitHub, con `pytest tests/hito1`, `pytest tests/hito2` y
-`pytest tests/s19` de este repositorio. **Pasa** = cero fallos.
+Medido hoy sobre la rama por defecto de cada GitHub, con
+`pytest tests/s19` de este repositorio (y el estado previo de Hito 1/2).
+**Pasa** = cero fallos. Plazo del encargo S19: antes de la clase del
+**23/11/2026**.
 
-Límites: Hito 1, **4/11/2026**; Hito 2, **11/11/2026 23:59** (cuenta la
-fecha de la etiqueta `entrega-02` en GitHub). Lo de la sesión 19 se
-entrega antes del **23/11/2026**.
+| Repositorio | Último commit | `entrega-02` | S19 (`tests/s19`) |
+| --- | --- | --- | --- |
+| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `189cefd`, 21/11 | sí | **Pasa** (11) |
+| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `a3b253e`, 18/11 | sí (11/11) | **Pasa** (11) |
+| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `99c0bfe`, 19/11 | no | 9 fallos, 2 passed (hay `streaming/`, falta acta y huecos) |
+| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `7e56274`, 18/11 | sí (18/11, fuera de plazo) | 2 fallos (sin `streaming/` ni `ACTA_S19.md`) |
+| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `0200627`, 18/11 | sí (18/11, fuera de plazo) | 2 fallos (sin `streaming/` ni acta) |
+| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `6f5b171`, 23/11 | no | 2 fallos (sin `streaming/` ni acta) |
+| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | `6c02a33`, 18/11 | no | 2 fallos (sin `streaming/` ni acta) |
 
-| Repositorio | Último commit | Hito 1 | Hito 2 | `entrega-02` | S19 |
-| --- | --- | --- | --- | --- | --- |
-| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `ca0cafd`, 11/11 | **Pasa** (65) | **Pasa** (20) | 11/11 10:16 | pendiente |
-| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `0200627`, 18/11 | **Pasa** (64, 1 omitido) | **Pasa** (20) | 18/11 18:41 (fuera de plazo) | pendiente |
-| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `7e56274`, 18/11 | **Pasa** (65) | 1 fallo | 18/11 15:15 (fuera de plazo) | pendiente |
-| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `3b9282f`, 17/11 | 1 fallo | 18 fallos | no | pendiente |
-| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `289bad2`, 04/11 | 23 fallos | 19 fallos | no | pendiente |
-| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `f18abfd`, 04/11 | 17 fallos | 20 fallos | no | pendiente |
-| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | no existe en GitHub | no medible | no medible | no | no medible |
-
-Desde la medición anterior: uag8076-web cierra los dos hitos, edurlix
-cierra el Hito 1 y se queda a un fallo del Hito 2, y hracjc vuelve a
-estar público. Nadie ha subido aún lo de la sesión 19 (es normal: se
-pidió hoy).
+Dos equipos cumplen el encargo S19 a fecha de hoy. El resto: copiar
+`streaming/` desde este repo, rellenar T1–T6, escribir `ACTA_S19.md` y
+pasar `tests/s19`.
 
 ## Problemas y arreglos (para pasar los tests)
 
-### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo): cumple
+### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata): S19 cumple
 
-Rodrigo Moreno Menéndez. Hito 1 y Hito 2 completos, etiqueta en plazo.
-Le queda lo de la sesión 19.
+Nasratullah Jabarkhil. `ACTA_S19.md` + `streaming/temp_stream.py`;
+`tests/s19` en verde (21/11). Tiene `entrega-02`.
 
-### [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026): cumple, fuera de plazo
+### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo): S19 cumple
 
-Ha arreglado hoy los tres fallos del Hito 1 y ha cerrado el Hito 2
-(`spark/job_01.py`, piezas B y C). La etiqueta `entrega-02` es del 18/11,
-después del límite. El test omitido es el de OWID, que este repo no usa.
-Le queda lo de la sesión 19.
+Rodrigo Moreno Menéndez. Hitos 1 y 2 en plazo; encargo S19 también
+pasa `tests/s19`.
 
-### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject): a un fallo del Hito 2
+### [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1): S19 a medias
 
-Eddyson Ureña. Hito 1 completo desde hoy.
+Hay `streaming/`, pero fallan huecos T4–T6 y falta `ACTA_S19.md`.
 
-| Problema | Arreglo |
-| --- | --- |
-| No hay `.gitignore` | Crear `.gitignore` con `data/`, `logs/` y `.venv/` y volver a etiquetar |
+### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject), [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026), [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto), [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData): sin S19
 
-La etiqueta `entrega-02` es del 18/11, después del límite.
+Copiad `streaming/` desde este repo, rellenad T1–T6, escribid
+`ACTA_S19.md` y ejecutad `pytest -q tests/s19 --repo=...`.
 
-### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata): 1 fallo del Hito 1
-
-Nasratullah Jabarkhil. Sin cambios desde el 17/11.
-
-| Problema | Arreglo |
-| --- | --- |
-| El Banco Mundial se pide país a país (`country/{iso2}/...`) | URL `country/all/indicator/...` y paginación contra `total`, sin `{iso2}` ni `{iso3}` en la plantilla |
-| Sin `spark/job_01.py`, `ENTREGA_02.md`, `BUGS.md`, `evidencias/` ni etiqueta | Cerrar el Hito 2 (checklist de abajo) |
-
-### [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1): de nuevo público, lejos del Hito 1
-
-Hernán Renero Villa. Último commit del 4/11: el repo está casi como el
-starter.
-
-| Problema | Arreglo |
-| --- | --- |
-| Menos de seis indicadores del Banco Mundial, sin serie completa ni paginación | Extract del Hito 1 completo |
-| Sin ritmo de cortesía, sin `run_id` en el manifiesto, guarda respuestas no 200, reintenta los 404 | Extract del Hito 1 completo |
-| Sin `countries.parquet`, `excluded_entities.csv`, Parquet Hive ni año entero | Universo y transform del Hito 1 |
-| Fichas sin mediana regional del mismo año | `build_cards` del Hito 1 |
-| Sin Hito 2 | Checklist de abajo |
-
-### [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto): 17 fallos, código en una subcarpeta
-
-Sin cambios desde el 4/11. El ETL vive en `practica_01_BigData_starter/`.
-
-| Problema | Arreglo |
-| --- | --- |
-| El código no está en la raíz del repo | Subir `src/`, `sources.yaml`, etc. a la raíz |
-| Sin `CONTRIBUTORS.md` | Nombres y correos `@...ucjc.edu` |
-| Sin `--force`, guarda respuestas no 200, no trata el 404 | Extract del Hito 1 |
-| Fichas sin mediana regional del mismo año | `build_cards` del Hito 1 |
-| Sin Hito 2 | Checklist de abajo |
-
-### [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData): no existe
-
-Sigue sin resolver en GitHub el 18/11. Sin URL pública no hay medición
-ni etiqueta: hay que restaurar el repo o publicar uno nuevo y avisar al
-profesor.
+Marcos: el trabajo reciente del 23/11 aún no incluye el encargo S19.
+Sumito: el repo volvió a ser público (`6c02a33`).
 
 ### Checklist mínimo del Hito 2 (quien aún no lo tenga)
 
@@ -274,11 +234,11 @@ profesor.
 4. `.gitignore` con `data/`, `logs/`, `.venv/`.
 5. `git tag -a entrega-02` y `git push origin entrega-02`.
 
-## Nota histórica (4 de noviembre de 2026)
+## Nota histórica
 
-Ese día **ningún** equipo pasaba ningún hito. El detalle de aquella
-pasada quedó en el historial Git de este README (`7c88b52` /
-`0aa4166`). La tabla canónica es la del **18 de noviembre** de arriba.
+El 4/11 ningún equipo pasaba ningún hito. El 18/11 a las 19:00 se midió
+otra vez (tabla antigua en el historial Git). La tabla canónica es la
+del **23 de noviembre** de arriba.
 
 ## Cómo funcionan las tareas automatizadas
 

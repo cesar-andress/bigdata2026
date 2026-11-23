@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Solo un autor: César Andrés <cesar.andress@ucjc.edu>. Nadie más.
+# Solo un autor: César Andrés <cesar.andress@ucjc.edu>.
+# Además: no versionar LaTeX/PDF ni colar rutas internas en Markdown público.
 set -euo pipefail
 REQUIRED_EMAIL='cesar.andress@ucjc.edu'
 REQUIRED_NAME='César Andrés'
@@ -40,3 +41,30 @@ case "$combined" in
     fail "identidad prohibida (Cursor/bot/aiserv/noreply) en author/committer/config"
     ;;
 esac
+
+# Bloquear artefactos de aula / LaTeX en el índice
+while IFS= read -r -d '' f; do
+  case "$f" in
+    *.tex|*.pdf|*.aux|*.nav|*.snm|*.toc|*.vrb|*.fls|*.fdb_latexmk|*.synctex.gz)
+      echo "pre-commit: no versionar LaTeX/PDF de aula: $f" >&2
+      exit 1
+      ;;
+    presentacion/*|SESION_*_aula*)
+      echo "pre-commit: no versionar material interno de aula: $f" >&2
+      exit 1
+      ;;
+  esac
+done < <(git diff --cached --name-only -z --diff-filter=ACMR)
+
+# En Markdown público: nada de rutas internas del monorepo ni menciones de producción
+while IFS= read -r -d '' f; do
+  case "$f" in
+    *.md)
+      if git show ":$f" 2>/dev/null | grep -qiE \
+        'UCJC-latex|/sesiones/|/capitulos/|guion_oral|\.tex\b|beamer-preamble|course-registry|monorepo|\.cursor/|Co-authored-by'; then
+        echo "pre-commit: $f menciona rutas internas, LaTeX/Beamer o Co-authored-by (prohibido en docs públicos)" >&2
+        exit 1
+      fi
+      ;;
+  esac
+done < <(git diff --cached --name-only -z --diff-filter=ACMR)

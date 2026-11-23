@@ -14,8 +14,19 @@ informe/*
 !informe/.gitkeep
 
 .pytest_cache/
-__pycache__/
-*.pyc
 
-# Solo local
+# Material de aula interno (no va al repo público)
 presentacion/
+*.tex
+*.pdf
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+SESION_*_aula*

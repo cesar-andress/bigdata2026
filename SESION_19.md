@@ -1,6 +1,7 @@
 # Sesión 19: 18 de noviembre de 2026
 
-Lo que hay que entregar: [`ENCARGO_S19.md`](ENCARGO_S19.md).
+Lo que hay que entregar: [`ENCARGO_S19.md`](ENCARGO_S19.md)
+(plazo: antes del 23/11/2026; ese día se revisa).
 
 ## La idea de hoy
 
