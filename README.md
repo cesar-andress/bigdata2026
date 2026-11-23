@@ -179,50 +179,54 @@ DataLab: [`SESION_19.md`](SESION_19.md). Hoy se revisa en aula.
 pytest -q tests/s19 --repo=/ruta/a/vuestro/clon
 ```
 
-## Estado de los equipos (23 de noviembre de 2026)
+## Estado de los equipos (23 de noviembre de 2026, 18:00)
 
-Medido hoy sobre la rama por defecto de cada GitHub, con
-`pytest tests/s19` de este repositorio (y el estado previo de Hito 1/2).
-**Pasa** = cero fallos. Plazo del encargo S19: antes de la clase del
-**23/11/2026**.
+Tras `git pull --ff-only` en cada clon y medición con
+`pytest tests/s19` y `pytest tests/s20` de **este** repositorio sobre la
+rama por defecto de cada GitHub. **Pasa** = cero fallos.
+Plazo S19: antes de la clase del **23/11/2026**. Encargo S20: publicar
+`DECISION_S20.md` en el repo del equipo.
 
-| Repositorio | Último commit | `entrega-02` | S19 (`tests/s19`) |
-| --- | --- | --- | --- |
-| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `189cefd`, 21/11 | sí | **Pasa** (11) |
-| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `a3b253e`, 18/11 | sí (11/11) | **Pasa** (11) |
-| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `99c0bfe`, 19/11 | no | 9 fallos, 2 passed (hay `streaming/`, falta acta y huecos) |
-| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `7e56274`, 18/11 | sí (18/11, fuera de plazo) | 2 fallos (sin `streaming/` ni `ACTA_S19.md`) |
-| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `0200627`, 18/11 | sí (18/11, fuera de plazo) | 2 fallos (sin `streaming/` ni acta) |
-| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `6f5b171`, 23/11 | no | 2 fallos (sin `streaming/` ni acta) |
-| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | `6c02a33`, 18/11 | no | 2 fallos (sin `streaming/` ni acta) |
+| Repositorio | Último commit | `entrega-02` | S19 (`tests/s19`) | S20 (`tests/s20`) |
+| --- | --- | --- | --- | --- |
+| [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata) | `189cefd`, 21/11 | sí | **Pasa** (11) | falta `DECISION_S20.md` |
+| [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo) | `a3b253e`, 18/11 | sí (11/11) | **Pasa** (11) | falta `DECISION_S20.md` |
+| [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1) | `99c0bfe`, 19/11 | no | 9 fallos, 2 passed | falta `DECISION_S20.md` |
+| [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject) | `7e56274`, 18/11 | sí (18/11, fuera de plazo) | 2 fallos (sin `streaming/` ni acta) | falta `DECISION_S20.md` |
+| [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026) | `0200627`, 18/11 | sí (18/11, fuera de plazo) | 2 fallos (sin `streaming/` ni acta) | falta `DECISION_S20.md` |
+| [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto) | `6f5b171`, 23/11 | no | 2 fallos (sin `streaming/` ni acta) | falta `DECISION_S20.md` |
+| [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData) | `6c02a33`, 18/11 | no | 2 fallos (sin `streaming/` ni acta) | falta `DECISION_S20.md` |
 
-Dos equipos cumplen el encargo S19 a fecha de hoy. El resto: copiar
-`streaming/` desde este repo, rellenar T1–T6, escribir `ACTA_S19.md` y
-pasar `tests/s19`.
+Ningún equipo ha publicado aún `DECISION_S20.md` (medición 18:00).
+Dos equipos cumplen S19. El resto: copiar `streaming/` desde este repo,
+rellenar T1–T6, escribir `ACTA_S19.md` y pasar `tests/s19`. Para S20:
+partid de `decision/plantilla_criterio.md` y de [`ENCARGO_S20.md`](ENCARGO_S20.md).
 
 ## Problemas y arreglos (para pasar los tests)
 
-### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata): S19 cumple
+### [nasratullahjabarkhil/bigdata](https://github.com/nasratullahjabarkhil/bigdata): S19 cumple; S20 pendiente
 
 Nasratullah Jabarkhil. `ACTA_S19.md` + `streaming/temp_stream.py`;
-`tests/s19` en verde (21/11). Tiene `entrega-02`.
+`tests/s19` en verde (21/11). Tiene `entrega-02`. Falta `DECISION_S20.md`.
 
-### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo): S19 cumple
+### [rmmenendez05/dsbd-big-data-repo](https://github.com/rmmenendez05/dsbd-big-data-repo): S19 cumple; S20 pendiente
 
 Rodrigo Moreno Menéndez. Hitos 1 y 2 en plazo; encargo S19 también
-pasa `tests/s19`.
+pasa `tests/s19`. Falta `DECISION_S20.md`.
 
-### [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1): S19 a medias
+### [hracjc/dsbd_etl_1](https://github.com/hracjc/dsbd_etl_1): S19 a medias; S20 pendiente
 
 Hay `streaming/`, pero fallan huecos T4–T6 y falta `ACTA_S19.md`.
+Sin `DECISION_S20.md`.
 
-### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject), [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026), [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto), [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData): sin S19
+### [edurlix/BigDataProject](https://github.com/edurlix/BigDataProject), [uag8076-web/BigData2026](https://github.com/uag8076-web/BigData2026), [marcosgale/BigData_Proyecto](https://github.com/marcosgale/BigData_Proyecto), [Sumitodemarmeto/Practica_02_BigData](https://github.com/Sumitodemarmeto/Practica_02_BigData): sin S19; S20 pendiente
 
 Copiad `streaming/` desde este repo, rellenad T1–T6, escribid
 `ACTA_S19.md` y ejecutad `pytest -q tests/s19 --repo=...`.
+Para S20: `DECISION_S20.md` + `pytest -q tests/s20 --repo=...`.
 
-Marcos: el trabajo reciente del 23/11 aún no incluye el encargo S19.
-Sumito: el repo volvió a ser público (`6c02a33`).
+Marcos: el trabajo del 23/11 (`6f5b171`, Update Extract) aún no incluye
+S19 ni S20. Sumito: el repo volvió a ser público (`6c02a33`).
 
 ### Checklist mínimo del Hito 2 (quien aún no lo tenga)
 
@@ -238,7 +242,7 @@ Sumito: el repo volvió a ser público (`6c02a33`).
 
 El 4/11 ningún equipo pasaba ningún hito. El 18/11 a las 19:00 se midió
 otra vez (tabla antigua en el historial Git). La tabla canónica es la
-del **23 de noviembre** de arriba.
+del **23 de noviembre, 18:00** de arriba (S19 + S20 tras `git pull`).
 
 ## Cómo funcionan las tareas automatizadas
 
