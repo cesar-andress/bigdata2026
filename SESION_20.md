@@ -1,30 +1,17 @@
 # Sesión 20: 23 de noviembre de 2026
 
-Lo que hay que entregar: [`ENCARGO_S20.md`](ENCARGO_S20.md).
+Entrega: [`ENCARGO_S20.md`](ENCARGO_S20.md).
 
-## La idea de hoy
+En la 19 el programa Spark no terminaba. Hoy: ¿hace falta dejarlo
+encendido siempre?
 
-En la sesión 19 montasteis (o debíais montar) un programa Spark que
-**no termina**. Hoy la pregunta cambia: ¿**debemos** tenerlo siempre
-encendido?
+- Informe de ocupación a las 08:00 → batch nocturno suele bastar.
+- Alerta de aforo en minutos → streaming mientras el edificio está abierto.
 
-Caso A: informe de ocupación a las 08:00 → suele bastar un **batch**
-nocturno. Caso B: alerta de aforo en minutos → sí hace falta
-**streaming** mientras el edificio está abierto.
+## Pasos
 
-Misma materia prima (eventos de aulas). Dos ritmos de consumidor.
-Dos arquitecturas.
+1. `git pull` de este repo; leed `decision/casos.yaml`.
+2. Escribid `DECISION_S20.md` (plantilla en `decision/plantilla_criterio.md`).
+3. `pytest -q tests/s20 --repo=...`
 
-## Lo que hacéis hoy
-
-**A.** `git pull` de este repo y leed `decision/casos.yaml`.
-
-**B.** Escribid `DECISION_S20.md` (plantilla en
-`decision/plantilla_criterio.md`).
-
-**C.** `pytest -q tests/s20 --repo=...`
-
-## Si aún no cerrasteis la sesión 19
-
-[`ENCARGO_S19.md`](ENCARGO_S19.md) sigue pendiente. Hoy se revisa en
-aula; no sustituye al criterio de decisión de esta sesión.
+Si la 19 no está cerrada: [`ENCARGO_S19.md`](ENCARGO_S19.md).

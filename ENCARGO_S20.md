@@ -1,8 +1,7 @@
 # Encargo de la sesión 20 (23/11/2026)
 
-Hoy no montáis un pipeline nuevo. Hoy **decidís** si hace falta.
-
-Se entrega en **vuestro** repositorio: fichero `DECISION_S20.md` en la raíz.
+Se entrega en **vuestro** repositorio: `DECISION_S20.md` en la raíz.
+No hay que montar un pipeline nuevo.
 
 ## A. Bajad lo nuevo
 
@@ -10,19 +9,19 @@ Se entrega en **vuestro** repositorio: fichero `DECISION_S20.md` en la raíz.
 cd bigdata2026 && git pull --ff-only
 ```
 
-Mirad `decision/casos.yaml` (hechos) y
-`decision/plantilla_criterio.md` (forma del documento).
+Hechos: `decision/casos.yaml`.
+Forma del documento: `decision/plantilla_criterio.md`.
 
 ## B. Escribid `DECISION_S20.md`
 
-Dos casos del mismo dominio (ocupación de aulas):
+Dos casos, mismas aulas:
 
-| Caso | Qué es | Conclusión que debe sostenerse con hechos |
+| Caso | Qué pide el consumidor | Conclusión que hay que justificar |
 | --- | --- | --- |
-| A · Informe de las ocho | Consulta diaria 08:00, frescura de horas | **batch** (no streaming 24/7 obligatorio) |
-| B · Alerta de aforo | Reacción en menos de 2 minutos | **streaming** (mientras haya riesgo que mitigar) |
+| A · Informe de las ocho | Consulta diaria a las 08:00; frescura de horas | **batch** |
+| B · Alerta de aforo | Reacción en menos de 2 minutos | **streaming** |
 
-En cada caso, rellenad al menos:
+En cada caso, al menos estos campos:
 
 - `latencia_util`
 - `frescura_admitida`
@@ -31,8 +30,10 @@ En cada caso, rellenad al menos:
 - `conclusion_arquitectura` (`batch` o `streaming`)
 - `por_que_no_la_otra` (una frase)
 
-Más las tres frases del consumidor (quién/cuándo; daño si tarde; valor
-si antes).
+Y las tres frases del consumidor: quién/cuándo; qué pasa si llega
+tarde; qué haríais si llega antes (o «ninguna»).
+
+No vale argumentar solo con «moderno», «tiempo real» o «ya hay Kafka».
 
 ## C. Pasad el test
 
@@ -42,12 +43,8 @@ Desde el clon de este repo:
 pytest -q tests/s20 --repo=/ruta/a/vuestro/clon
 ```
 
-Un fallo = el documento no cumple el contrato de hoy.
+Un fallo = el documento no cumple el contrato.
 
-## Puente con lo anterior
+## Si la sesión 19 sigue abierta
 
-- Sesión 19: sabéis montar un query continuo con checkpoint.
-- Hoy: sabéis decir **cuándo no hace falta** montarlo (informe) y
-  **cuándo sí** (alerta).
-- Quien tenga S19 pendiente: sigue contando
-  [`ENCARGO_S19.md`](ENCARGO_S19.md).
+[`ENCARGO_S19.md`](ENCARGO_S19.md) no se cancela. Hoy se revisa aparte.

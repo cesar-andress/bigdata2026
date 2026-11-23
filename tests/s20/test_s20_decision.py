@@ -1,9 +1,6 @@
-"""S20: DECISION_S20.md — criterio batch frente a streaming.
+"""S20: comprueba DECISION_S20.md (campos y conclusiones de aula).
 
-Comprobación estática del documento de decisión. No arranca Spark ni
-Kafka. Que pase no demuestra que el diseño esté desplegado: demuestra
-que el criterio está escrito con los campos mínimos y conclusiones
-coherentes con los dos casos de aula.
+No arranca Spark ni Kafka.
 """
 
 from __future__ import annotations
