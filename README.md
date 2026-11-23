@@ -16,15 +16,13 @@ El trabajo se hace en **vuestro** repositorio de equipo, no en este.
 
 ## Hoy: 23 de noviembre de 2026 (sesión 20)
 
-Seguimos en el **Tema VII**. Hoy se **revisa** el encargo de la sesión 19
-([`ENCARGO_S19.md`](ENCARGO_S19.md): plazo antes de esta clase) y se
-trabaja el contraste batch frente a streaming. Este repo sigue siendo
-la fuente de «lo nuevo» (tests, `streaming/`, checklist).
+**Nuevo:** criterio batch frente a streaming. No montáis un pipeline:
+escribís `DECISION_S20.md` con dos casos (informe de las 08:00 → batch;
+alerta de aforo → streaming). Detalle: [`ENCARGO_S20.md`](ENCARGO_S20.md)
+y [`SESION_20.md`](SESION_20.md).
 
-## Lo de la sesión 19 (18/11/2026)
-
-El 18/11 en aula fue Structured Streaming (estado, checkpointing y
-recuperación) en DataLab.
+También se **revisa** el encargo de la sesión 19
+([`ENCARGO_S19.md`](ENCARGO_S19.md)).
 
 ### Qué descargar / actualizar
 
@@ -34,17 +32,11 @@ git clone https://github.com/cesar-andress/bigdata2026.git
 cd bigdata2026 && git pull --ff-only
 ```
 
-También podéis pedir al profesor el `kit_sesion_19.zip` (`make kit-hoy`
-en este clon): tests, workflows, `streaming/`, `SESION_19.md`,
-`ENCARGO_S19.md` y dependencias.
+Kit del día: `make kit-hoy` → `kit_sesion_20.zip` (incluye `decision/`,
+`ENCARGO_S20.md`, `tests/s20/` y lo vigente de la 19).
 
-**Del 18/11 (sigue vigente):** `streaming/temp_stream.py` (T1 a T6),
-`streaming/publicar_control.sh`, `streaming/publicar_trampas.sh` y
-`tests/s19/`. Si aún no lo entregasteis: [`ENCARGO_S19.md`](ENCARGO_S19.md).
-
-Leed primero **[`SESION_19.md`](SESION_19.md)** (checklist de aula:
-batch frente a streaming, tres memorias, checkpoint
-`~/checkpoints/temp-stream`, Kafka `127.0.0.1:9092` / `sensores.temp`).
+**Nuevo hoy:** `decision/casos.yaml`, `decision/plantilla_criterio.md`,
+`tests/s20/`. Entrega: `DECISION_S20.md` en **vuestro** repo.
 
 ### Cómo lanzar los tests contra vuestro clon
 
@@ -52,13 +44,13 @@ batch frente a streaming, tres memorias, checkpoint
 pip install -r requirements.txt -r requirements-dev.txt   # pyarrow incluido
 pytest -q tests/hito1 --repo=/ruta/a/vuestro/clon
 pytest -q tests/hito2 --repo=/ruta/a/vuestro/clon
-pytest -q tests/s19   --repo=/ruta/a/vuestro/clon   # nuevo hoy
-# o: make test-hito1 REPO=/ruta/a/vuestro/clon
+pytest -q tests/s19   --repo=/ruta/a/vuestro/clon
+pytest -q tests/s20   --repo=/ruta/a/vuestro/clon   # nuevo hoy
+# o: make test-s20 REPO=/ruta/a/vuestro/clon
 ```
 
 La opción es `--repo` (registrada en `tests/conftest.py`). Un solo
-fallo = el hito no pasa. Detalle de la sesión y del estado por equipo:
-más abajo y en `SESION_19.md`.
+fallo = el encargo de esa batería no pasa.
 
 ## Qué tenéis que hacer
 
@@ -170,10 +162,18 @@ Sobre el starter original **los tests de contrato fallan a propósito**.
 El detalle de qué mira cada hito, y cómo lanzar la batería contra
 vuestro clon, está en «Qué tenéis que hacer».
 
+## Encargo S20 (hoy)
+
+[`ENCARGO_S20.md`](ENCARGO_S20.md) · checklist [`SESION_20.md`](SESION_20.md).
+
+```bash
+pytest -q tests/s20 --repo=/ruta/a/vuestro/clon
+```
+
 ## Encargo S19 (plazo: antes del 23/11/2026)
 
 Los pasos A, B y C están en [`ENCARGO_S19.md`](ENCARGO_S19.md). Datos de
-DataLab: [`SESION_19.md`](SESION_19.md). Hoy (23/11) se revisa en aula.
+DataLab: [`SESION_19.md`](SESION_19.md). Hoy se revisa en aula.
 
 ```bash
 pytest -q tests/s19 --repo=/ruta/a/vuestro/clon
@@ -283,11 +283,15 @@ de más arriba, que actualiza el profesor.
 
 | Ruta | Contenido |
 | --- | --- |
-| `SESION_19.md` | Checklist de aula (18/11, Structured Streaming) |
-| `ENCARGO_S19.md` | Entrega tras la clase (T1 a T6 + tests/s19 + acta) |
+| `SESION_20.md` | Checklist de aula (23/11, criterio batch vs streaming) |
+| `ENCARGO_S20.md` | Entrega de hoy (`DECISION_S20.md` + tests/s20) |
+| `decision/` | Casos YAML + plantilla del criterio |
+| `tests/s20/` | Comprobación estática de `DECISION_S20.md` |
+| `SESION_19.md` | Checklist (18/11, Structured Streaming) |
+| `ENCARGO_S19.md` | Entrega S19 (T1 a T6 + tests/s19 + acta) |
 | `streaming/` | Starter `temp_stream.py` y scripts de publicación (S19) |
 | `tests/s19/` | Comprobación estática del query y del acta (S19) |
-| `Makefile` | `deps`, `test-hito1`/`test-hito2` con `REPO=…`, `kit-hoy` |
+| `Makefile` | `deps`, `test-hito*`/`test-s19`/`test-s20`, `kit-hoy` |
 | `src/` | Extract / transform / load / fichas |
 | `sources.yaml` | Fuentes y países foco |
 | `data/` | `raw`, `clean` y `serving` (artefactos locales, no versionados) |
