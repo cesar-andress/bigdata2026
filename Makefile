@@ -1,5 +1,9 @@
 # Ayudas locales del repo docente (no es la solución de la práctica).
+# Usad python3 -m pytest (el pytest del PATH a veces apunta a un intérprete roto).
 .PHONY: help deps test-hito1 test-hito2 test-s19 test-s20 kit-hoy
+
+PYTHON ?= python3
+PYTEST  = $(PYTHON) -m pytest
 
 help:
 	@echo "Objetivos útiles:"
@@ -11,23 +15,23 @@ help:
 	@echo "  make kit-hoy              # zip con lo nuevo de la sesión 20"
 
 deps:
-	pip install -r requirements.txt -r requirements-dev.txt
+	$(PYTHON) -m pip install -r requirements.txt -r requirements-dev.txt
 
 test-hito1:
 	@test -n "$(REPO)" || (echo "Usad: make test-hito1 REPO=/ruta/a/vuestro/clon" >&2; exit 1)
-	pytest -q tests/hito1 --repo="$(REPO)"
+	$(PYTEST) -q tests/hito1 --repo="$(REPO)"
 
 test-hito2:
 	@test -n "$(REPO)" || (echo "Usad: make test-hito2 REPO=/ruta/a/vuestro/clon" >&2; exit 1)
-	pytest -q tests/hito2 --repo="$(REPO)"
+	$(PYTEST) -q tests/hito2 --repo="$(REPO)"
 
 test-s19:
 	@test -n "$(REPO)" || (echo "Usad: make test-s19 REPO=/ruta/a/vuestro/clon" >&2; exit 1)
-	pytest -q tests/s19 --repo="$(REPO)"
+	$(PYTEST) -q tests/s19 --repo="$(REPO)"
 
 test-s20:
 	@test -n "$(REPO)" || (echo "Usad: make test-s20 REPO=/ruta/a/vuestro/clon" >&2; exit 1)
-	pytest -q tests/s20 --repo="$(REPO)"
+	$(PYTEST) -q tests/s20 --repo="$(REPO)"
 
 # Empaqueta lo nuevo de hoy (sesión 20) + lo aún vigente de la 19.
 kit-hoy:
